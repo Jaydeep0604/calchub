@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compound Interest Calculator - Investment & Wealth Growth Projection</title>
+  <meta name="description" content="Calculate your future investment balance, total interest earned, and wealth accumulation with regular contributions and compound interest. Free, instant, and interactive.">
+  <meta name="keywords" content="compound interest calculator, investment growth calculator, savings calculator, future value calculator, fire calculator">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="loan-calculator.html" data-i18n="nav_loan" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Loan / EMI</a>
+        <a href="profit-margin-calculator.html" data-i18n="nav_margin" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Profit Margin</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ad Container (Hidden until approval) -->
+  <div class="ad-slot-container max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 w-full">
+    <div class="border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-2 text-center text-xs text-slate-400 uppercase tracking-widest font-semibold flex items-center justify-center h-20">
+      <span>Advertisement Space (Google AdSense Header)</span>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs & Heading -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="compound_title">Compound Interest Calculator</span>
+    </nav>
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="compound_title">Compound Interest Calculator</h1>
+      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+        📈 Wealth & Investing
+      </span>
+    </div>
+    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="compound_subtitle">Project your future wealth with monthly contributions, annual return rates, and compound growth.</p>
+  </div>
+
+  <!-- Main Calculator Workspace -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+
+      <!-- Left Column: Inputs (7 cols) -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <span>📊</span> Investment Parameters
+        </h2>
+
+        <div class="space-y-6">
+          <!-- Starting Deposit -->
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2.5">
+              <label for="initialDeposit" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="starting_deposit">Initial Starting Deposit</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="initialDeposit" value="5000" min="0" max="1000000" step="500"
+                  class="w-32 sm:w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+              </div>
+            </div>
+            <input type="range" id="initialDepositSlider" min="0" max="100000" step="500" value="5000" class="w-full">
+          </div>
+
+          <!-- Monthly Addition -->
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2.5">
+              <label for="monthlyContribution" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="monthly_addition">Monthly Addition</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="monthlyContribution" value="300" min="0" max="50000" step="50"
+                  class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+              </div>
+            </div>
+            <input type="range" id="monthlyContributionSlider" min="0" max="5000" step="50" value="300" class="w-full">
+          </div>
+
+          <!-- Return Rate -->
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2.5">
+              <label for="returnRate" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="estimated_return">Estimated Annual Return Rate</label>
+              <div class="relative rounded-xl shadow-sm">
+                <input type="number" id="returnRate" value="8" min="0.1" max="30" step="0.1"
+                  class="w-24 pl-3 pr-7 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold">%</span>
+              </div>
+            </div>
+            <input type="range" id="returnRateSlider" min="1" max="20" step="0.5" value="8" class="w-full">
+            <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
+              <span>Conservative (4-6%)</span>
+              <span>S&P 500 (~8-10%)</span>
+              <span>Aggressive (12%+)</span>
+            </div>
+          </div>
+
+          <!-- Investment Horizon (Years) -->
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2.5">
+              <label for="investmentYears" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="investment_horizon">Investment Horizon</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="investmentYears" value="15" min="1" max="50" step="1"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                <span class="text-slate-500 font-normal">Years</span>
+              </div>
+            </div>
+            <input type="range" id="investmentYearsSlider" min="1" max="40" step="1" value="15" class="w-full">
+          </div>
+
+          <!-- Frequency -->
+          <div class="flex flex-wrap justify-between items-center gap-2 pt-2">
+            <label for="compoundFreq" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="compound_freq">Compounding Frequency</label>
+            <select id="compoundFreq" class="text-xs font-bold py-1.5 px-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none">
+              <option value="12" selected>Monthly (Standard)</option>
+              <option value="1">Annually</option>
+              <option value="4">Quarterly</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+          <span>💡 Small monthly deposits create the largest exponential compound effect.</span>
+          <button id="resetBtn" class="text-brand-600 dark:text-emerald-400 font-bold hover:underline" data-i18n="reset_default">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results & Line Chart (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="future_balance">Total Future Balance</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy_summary">Copy</span>
+            </button>
+          </div>
+
+          <div class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight" id="futureBalance">$123,894.20</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Projected portfolio value in <span id="summaryYears" class="font-bold text-slate-900 dark:text-white">15</span> years</p>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="money_contributed">Total Money Contributed</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="summaryPrincipal">$59,000.00</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="compound_earned">Total Compound Interest Earned</span>
+              <span class="font-bold text-emerald-600 dark:text-emerald-400" id="summaryInterest">$64,894.20</span>
+            </div>
+            <div class="flex justify-between items-center text-xs pt-2 text-slate-400 dark:text-slate-500">
+              <span>Interest Multiplier</span>
+              <span class="font-bold text-slate-700 dark:text-slate-200" id="summaryRatio">110% Gain</span>
+            </div>
+          </div>
+
+          <!-- Chart.js Line Chart Visualization -->
+          <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center mb-3" data-i18n="trajectory_title">Portfolio Growth Trajectory</h3>
+            <div class="h-48 sm:h-52 w-full relative">
+              <canvas id="growthChart"></canvas>
+            </div>
+            <div class="flex justify-center gap-6 text-xs font-semibold text-slate-600 dark:text-slate-300 mt-4">
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span> Principal
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 dark:bg-emerald-400 inline-block"></span> Total Portfolio
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yearly Breakdown Table -->
+    <div class="mt-8 sm:mt-10 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+      <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white mb-1">Annual Investment Growth Schedule</h2>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 sm:mb-6">Year-by-year accumulation of deposits and compound interest.</p>
+
+      <div class="sm:hidden text-[11px] text-cyan-600 dark:text-cyan-400 mb-2 font-medium flex items-center gap-1">
+        <span>👉</span> <span>Swipe table horizontally to view yearly schedule</span>
+      </div>
+
+      <div class="table-scroll-container max-h-96">
+        <table class="w-full min-w-[520px] text-left text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs uppercase font-bold border-b border-slate-200 dark:border-slate-700 sticky top-0">
+            <tr>
+              <th class="py-3 px-4">Year</th>
+              <th class="py-3 px-4 text-right">Deposits Contributed</th>
+              <th class="py-3 px-4 text-right">Interest for Year</th>
+              <th class="py-3 px-4 text-right">Total Interest to Date</th>
+              <th class="py-3 px-4 text-right">End-of-Year Balance</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- User-Friendly Explanation Section -->
+    <article class="mt-8 sm:mt-10 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">How Does Compound Interest Work?</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Compound interest is often called the <em>"eighth wonder of the world"</em>. Unlike simple interest, which only pays returns on your original deposit, compound interest earns interest on your previous interest. Over time, your money snowballs into exponential growth.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">⏳</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Time in the Market</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Starting 5 years earlier can double your eventual retirement nest egg, even if you invest less total money.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">🔄</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Automated DCA</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Consistent monthly additions smooth out market volatility through Dollar-Cost Averaging without guessing tops or bottoms.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">📈</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">The Rule of 72</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Divide 72 by your annual interest rate to see roughly how many years it takes for your investment to double in size.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- Mobile Floating Sticky Result Bar -->
+  <div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-obsidian-900/95 border-t border-slate-200 dark:border-slate-800 px-5 py-3 flex items-center justify-between nav-blur shadow-lg">
+    <div>
+      <span class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 block">Future Balance</span>
+      <span class="text-xl font-black text-emerald-600 dark:text-emerald-400" id="mobileBalance">$123,894.20</span>
+    </div>
+    <button onclick="document.getElementById('futureBalance').scrollIntoView({behavior: 'smooth'})" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 dark:bg-emerald-500 text-white dark:text-slate-950">
+      View Details
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-2 text-slate-900 dark:text-white font-bold">
+        <span class="w-6 h-6 rounded-md bg-brand-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center text-xs font-bold">%</span>
+        CalcHub
+      </div>
+      <div class="flex gap-4">
+        <a href="index.html" class="hover:text-slate-900 dark:hover:text-white transition">All Calculators</a>
+        <a href="privacy-policy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Use</a>
+      </div>
+      <div>© 2026 CalcHub. All calculations are for educational purposes.</div>
+    </div>
+  </footer>
+
+  <script>
+    const initialDepositInput = document.getElementById('initialDeposit');
+    const initialDepositSlider = document.getElementById('initialDepositSlider');
+    const monthlyContributionInput = document.getElementById('monthlyContribution');
+    const monthlyContributionSlider = document.getElementById('monthlyContributionSlider');
+    const returnRateInput = document.getElementById('returnRate');
+    const returnRateSlider = document.getElementById('returnRateSlider');
+    const investmentYearsInput = document.getElementById('investmentYears');
+    const investmentYearsSlider = document.getElementById('investmentYearsSlider');
+    const compoundFreqSelect = document.getElementById('compoundFreq');
+    const resetBtn = document.getElementById('resetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const futureBalanceEl = document.getElementById('futureBalance');
+    const mobileBalanceEl = document.getElementById('mobileBalance');
+    const summaryYearsEl = document.getElementById('summaryYears');
+    const summaryPrincipalEl = document.getElementById('summaryPrincipal');
+    const summaryInterestEl = document.getElementById('summaryInterest');
+    const summaryRatioEl = document.getElementById('summaryRatio');
+    const scheduleBody = document.getElementById('scheduleBody');
+
+    let growthChartInstance = null;
+
+    function getChartTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      return {
+        lineColor: isDark ? '#10b981' : '#10b981',
+        bgGradient: isDark ? 'rgba(16, 185, 129, 0.15)' : 'rgba(16, 185, 129, 0.1)',
+        gridColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+        tickColor: isDark ? '#94a3b8' : '#64748b'
+      };
+    }
+
+    function initGrowthChart(labels, principalData, totalData) {
+      const ctx = document.getElementById('growthChart').getContext('2d');
+      const theme = getChartTheme();
+
+      growthChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Total Balance',
+              data: totalData,
+              borderColor: theme.lineColor,
+              backgroundColor: theme.bgGradient,
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2.5
+            },
+            {
+              label: 'Principal Invested',
+              data: principalData,
+              borderColor: '#94a3b8',
+              backgroundColor: 'transparent',
+              borderWidth: 1.5,
+              borderDash: [5, 5]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (c) => ` ${c.dataset.label}: ${CalcCurrency.format(c.raw, 0)}`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: theme.tickColor } },
+            y: {
+              grid: { color: theme.gridColor },
+              ticks: {
+                color: theme.tickColor,
+                callback: (v) => CalcCurrency.getSymbol() + (v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v)
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function updateGrowthChart(labels, principalData, totalData) {
+      if (!growthChartInstance) {
+        initGrowthChart(labels, principalData, totalData);
+      } else {
+        const theme = getChartTheme();
+        growthChartInstance.data.labels = labels;
+        growthChartInstance.data.datasets[0].data = totalData;
+        growthChartInstance.data.datasets[1].data = principalData;
+        growthChartInstance.options.scales.y.grid.color = theme.gridColor;
+        growthChartInstance.options.scales.x.ticks.color = theme.tickColor;
+        growthChartInstance.options.scales.y.ticks.color = theme.tickColor;
+        growthChartInstance.update();
+      }
+    }
+
+    function calculateCompound() {
+      const P = parseFloat(initialDepositInput.value) || 0;
+      const PMT = parseFloat(monthlyContributionInput.value) || 0;
+      const annualRate = (parseFloat(returnRateInput.value) || 0) / 100;
+      const years = parseInt(investmentYearsInput.value) || 1;
+
+      summaryYearsEl.textContent = years;
+
+      let balance = P;
+      let totalDeposited = P;
+      const labels = ['Start'];
+      const principalArr = [P];
+      const totalArr = [P];
+
+      let html = '';
+
+      for (let y = 1; y <= years; y++) {
+        let yearStartBalance = balance;
+        let yearDeposits = PMT * 12;
+
+        for (let m = 1; m <= 12; m++) {
+          balance += PMT;
+          balance += balance * (annualRate / 12);
+        }
+
+        totalDeposited += yearDeposits;
+        let interestThisYear = balance - yearStartBalance - yearDeposits;
+        let totalInterestToDate = balance - totalDeposited;
+
+        labels.push(`Y${y}`);
+        principalArr.push(Math.round(totalDeposited));
+        totalArr.push(Math.round(balance));
+
+        html += `
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+            <td class="py-3 px-4 font-bold text-slate-900 dark:text-white">Year ${y}</td>
+            <td class="py-3 px-4 text-right font-medium text-slate-700 dark:text-slate-300">${CalcCurrency.format(totalDeposited)}</td>
+            <td class="py-3 px-4 text-right font-medium text-emerald-600 dark:text-emerald-400">+${CalcCurrency.format(Math.max(0, interestThisYear))}</td>
+            <td class="py-3 px-4 text-right font-semibold text-emerald-600 dark:text-emerald-400">${CalcCurrency.format(Math.max(0, totalInterestToDate))}</td>
+            <td class="py-3 px-4 text-right font-black text-slate-900 dark:text-white">${CalcCurrency.format(balance)}</td>
+          </tr>
+        `;
+      }
+
+      const totalInterest = Math.max(0, balance - totalDeposited);
+      const formattedBalance = CalcCurrency.format(balance);
+      futureBalanceEl.textContent = formattedBalance;
+      if (mobileBalanceEl) mobileBalanceEl.textContent = formattedBalance;
+      summaryPrincipalEl.textContent = CalcCurrency.format(totalDeposited);
+      summaryInterestEl.textContent = CalcCurrency.format(totalInterest);
+      
+      const gainPercent = totalDeposited > 0 ? ((totalInterest / totalDeposited) * 100).toFixed(0) : 0;
+      summaryRatioEl.textContent = `${gainPercent}% Total Gain`;
+
+      scheduleBody.innerHTML = html;
+      updateGrowthChart(labels, principalArr, totalArr);
+    }
+
+    function sync(input, slider) {
+      input.addEventListener('input', () => { slider.value = input.value; calculateCompound(); });
+      slider.addEventListener('input', () => { input.value = slider.value; calculateCompound(); });
+    }
+
+    sync(initialDepositInput, initialDepositSlider);
+    sync(monthlyContributionInput, monthlyContributionSlider);
+    sync(returnRateInput, returnRateSlider);
+    sync(investmentYearsInput, investmentYearsSlider);
+    compoundFreqSelect.addEventListener('change', calculateCompound);
+
+    resetBtn.addEventListener('click', () => {
+      initialDepositInput.value = 5000;
+      initialDepositSlider.value = 5000;
+      monthlyContributionInput.value = 300;
+      monthlyContributionSlider.value = 300;
+      returnRateInput.value = 8;
+      returnRateSlider.value = 8;
+      investmentYearsInput.value = 15;
+      investmentYearsSlider.value = 15;
+      compoundFreqSelect.value = '12';
+      calculateCompound();
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const summaryText = `Compound Interest Projection:\n` +
+        `• Starting Deposit: ${initialDepositInput.value}\n` +
+        `• Monthly Addition: ${monthlyContributionInput.value}\n` +
+        `• Total Future Balance: ${futureBalanceEl.textContent}\n` +
+        `• Principal Contributed: ${summaryPrincipalEl.textContent}\n` +
+        `• Total Interest Earned: ${summaryInterestEl.textContent}\n` +
+        `Calculated on CalcHub.`;
+      navigator.clipboard.writeText(summaryText).then(() => {
+        window.showToast('Investment summary copied to clipboard!');
+      });
+    });
+
+    window.addEventListener('themeChanged', () => {
+      if (growthChartInstance) {
+        const theme = getChartTheme();
+        growthChartInstance.options.scales.y.grid.color = theme.gridColor;
+        growthChartInstance.options.scales.x.ticks.color = theme.tickColor;
+        growthChartInstance.options.scales.y.ticks.color = theme.tickColor;
+        growthChartInstance.update();
+      }
+    });
+    window.addEventListener('currencyChanged', calculateCompound);
+
+    calculateCompound();
+  </script>
+</body>
+</html>

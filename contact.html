@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - CalcHub</title>
+  <meta name="description" content="Get in touch with the CalcHub team for feedback, calculator requests, or bug reports.">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+        <a href="index.html" class="hidden sm:inline-flex text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-obsidian-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+          ← Calculators
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 flex-grow">
+    <div class="premium-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 space-y-5 sm:space-y-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Contact & Feedback</h1>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Have a suggestion for a new calculator or noticed an issue? We'd love to hear from you.</p>
+      </div>
+
+      <form class="space-y-4" onsubmit="event.preventDefault(); window.showToast('Thank you! Your message was received.'); this.reset();">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Your Name</label>
+          <input type="text" required placeholder="John Doe" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
+          <input type="email" required placeholder="john@example.com" class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Subject</label>
+          <select class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option>Request a New Calculator</option>
+            <option>Bug Report / Calculation Correction</option>
+            <option>Advertising & Partnership Inquiry</option>
+            <option>General Feedback</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Message</label>
+          <textarea rows="4" required placeholder="Describe your question or idea..." class="w-full px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+        </div>
+        <button type="submit" class="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white dark:text-slate-950 font-extrabold rounded-xl text-sm transition shadow-sm">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All rights reserved.
+  </footer>
+</body>
+</html>

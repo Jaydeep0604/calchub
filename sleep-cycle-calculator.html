@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sleep Cycle & Wake-Up Calculator - REM Sleep & Optimum Bedtime</title>
+  <meta name="description" content="Calculate the optimal time to go to bed or wake up refreshed based on natural 90-minute REM sleep cycles. Eliminate morning brain fog. Free and instant.">
+  <meta name="keywords" content="sleep calculator, sleep cycle calculator, bedtime calculator, wake up time, REM sleep calculator, optimal sleep">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="percentage-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Daily Math</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="sleep_title">Sleep Cycle Calculator</span>
+    </nav>
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="sleep_title">Sleep Cycle & Wake-Up Calculator</h1>
+      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+        🧘 Self & Health
+      </span>
+    </div>
+    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="sleep_sub">Wake up refreshed between 90-minute REM cycles instead of groggy in the middle of deep sleep.</p>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    
+    <!-- Mode Toggle Tabs -->
+    <div class="flex justify-center mb-6 sm:mb-8">
+      <div class="inline-flex w-full sm:w-auto p-1 rounded-2xl bg-slate-200 dark:bg-obsidian-800 border border-slate-300 dark:border-slate-700">
+        <button id="tabWakeTime" class="flex-1 sm:flex-none px-3 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition bg-white dark:bg-emerald-500 text-slate-900 dark:text-slate-950 shadow-sm">
+          I want to wake up at...
+        </button>
+        <button id="tabBedNow" class="flex-1 sm:flex-none px-3 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+          If I go to bed now...
+        </button>
+      </div>
+    </div>
+
+    <!-- Mode 1: Wake Up Time Inputs -->
+    <div id="wakeTimeSection" class="max-w-2xl mx-auto premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-6 sm:mb-8">
+      <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-4 text-center">
+        What time do you need to wake up?
+      </h2>
+      <div class="flex justify-center items-center gap-3 mb-6">
+        <input type="time" id="wakeInputTime" value="07:00"
+          class="px-4 sm:px-5 py-2.5 sm:py-3 text-xl sm:text-2xl font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500">
+      </div>
+      <p class="text-center text-xs text-slate-500 dark:text-slate-400">
+        Includes an average of <strong>14 minutes</strong> to fall asleep.
+      </p>
+    </div>
+
+    <!-- Recommended Sleep Results Cards -->
+    <div class="max-w-3xl mx-auto space-y-4">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 text-center" id="resultsHeader">
+        Suggested Bedtimes to Wake Up Refreshed
+      </h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4" id="cyclesGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+
+    <!-- User-Friendly Friendly Explanation Section -->
+    <article class="mt-8 sm:mt-12 max-w-4xl mx-auto premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Why Do Sleep Cycles Matter?</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Have you ever slept for 9 hours and woken up feeling exhausted, but other times slept for only 6 hours and felt completely energized? The secret is <strong>not the total hours</strong>, but <strong>waking up at the right point in your natural 90-minute sleep cycle</strong>.
+        </p>
+      </div>
+
+      <!-- 3-Step Visual Breakdown -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center font-black text-xs mb-3">1</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Light Sleep & Dreams</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Your body begins drifting into NREM Stage 1 & 2. Muscles relax and heart rate slows.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center font-black text-xs mb-3">2</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Deep Healing Sleep</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Delta brainwaves occur. Waking up during this stage causes heavy grogginess (sleep inertia).</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">3</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">REM Stage (Optimal Wake)</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Brain activity mirrors wakefulness. Waking up at the end of REM feels effortless and alert.</p>
+        </div>
+      </div>
+
+      <!-- Relatable Example -->
+      <div class="p-4 sm:p-6 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200/60 dark:border-indigo-800/40">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">📌 Sleep Cycle Math in Action</h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          If you need to wake up at <strong>7:00 AM</strong>, you should aim to fall asleep by:
+        </p>
+        <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-1 list-disc pl-5 mt-2">
+          <li><strong>10:00 PM:</strong> 6 complete cycles (9 hours of sleep) — Perfect restoration.</li>
+          <li><strong>11:30 PM:</strong> 5 complete cycles (7.5 hours of sleep) — The sweet spot for most healthy adults.</li>
+          <li><strong>01:00 AM:</strong> 4 complete cycles (6.0 hours of sleep) — Sufficient for busy weekdays.</li>
+        </ul>
+      </div>
+    </article>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All rights reserved.
+  </footer>
+
+  <script>
+    const tabWakeTime = document.getElementById('tabWakeTime');
+    const tabBedNow = document.getElementById('tabBedNow');
+    const wakeTimeSection = document.getElementById('wakeTimeSection');
+    const wakeInputTime = document.getElementById('wakeInputTime');
+    const resultsHeader = document.getElementById('resultsHeader');
+    const cyclesGrid = document.getElementById('cyclesGrid');
+
+    let currentMode = 'wake'; // 'wake' or 'now'
+
+    function formatTime(date) {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return `${hours}:${minutes} ${ampm}`;
+    }
+
+    function calculateBedtimes() {
+      cyclesGrid.innerHTML = '';
+      const [wHours, wMinutes] = wakeInputTime.value.split(':').map(Number);
+      const targetDate = new Date();
+      targetDate.setHours(wHours, wMinutes, 0, 0);
+
+      // Bedtimes: subtract (cycles * 90 mins + 14 mins to fall asleep)
+      const cycles = [
+        { count: 6, hours: '9.0 hrs', badge: 'Optimal', color: 'cyan' },
+        { count: 5, hours: '7.5 hrs', badge: 'Recommended', color: 'emerald' },
+        { count: 4, hours: '6.0 hrs', badge: 'Good Rest', color: 'indigo' },
+        { count: 3, hours: '4.5 hrs', badge: 'Power Nap', color: 'slate' }
+      ];
+
+      resultsHeader.textContent = "To wake up at " + wakeInputTime.value + ", aim to fall asleep at:";
+
+      cycles.forEach(c => {
+        const bedtime = new Date(targetDate.getTime() - ((c.count * 90 + 14) * 60000));
+        const card = document.createElement('div');
+        card.className = 'premium-card p-5 rounded-2xl text-center space-y-2';
+        card.innerHTML = `
+          <span class="text-[10px] font-bold uppercase tracking-wider text-${c.color}-600 dark:text-${c.color}-400 bg-${c.color}-50 dark:bg-${c.color}-950/60 px-2 py-0.5 rounded-md border border-${c.color}-200 dark:border-${c.color}-800/40">
+            ${c.badge} (${c.count} cycles)
+          </span>
+          <div class="text-2xl font-black text-slate-900 dark:text-white pt-1">
+            ${formatTime(bedtime)}
+          </div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            ${c.hours} of sleep
+          </div>
+        `;
+        cyclesGrid.appendChild(card);
+      });
+    }
+
+    function calculateWakeTimesFromNow() {
+      cyclesGrid.innerHTML = '';
+      const now = new Date();
+      resultsHeader.textContent = "If you go to bed right now, wake up at one of these times:";
+
+      const cycles = [
+        { count: 3, hours: '4.5 hrs', badge: 'Power Nap', color: 'slate' },
+        { count: 4, hours: '6.0 hrs', badge: 'Good Rest', color: 'indigo' },
+        { count: 5, hours: '7.5 hrs', badge: 'Recommended', color: 'emerald' },
+        { count: 6, hours: '9.0 hrs', badge: 'Optimal', color: 'cyan' }
+      ];
+
+      cycles.forEach(c => {
+        const wakeTime = new Date(now.getTime() + ((c.count * 90 + 14) * 60000));
+        const card = document.createElement('div');
+        card.className = 'premium-card p-5 rounded-2xl text-center space-y-2';
+        card.innerHTML = `
+          <span class="text-[10px] font-bold uppercase tracking-wider text-${c.color}-600 dark:text-${c.color}-400 bg-${c.color}-50 dark:bg-${c.color}-950/60 px-2 py-0.5 rounded-md border border-${c.color}-200 dark:border-${c.color}-800/40">
+            ${c.badge} (${c.count} cycles)
+          </span>
+          <div class="text-2xl font-black text-slate-900 dark:text-white pt-1">
+            ${formatTime(wakeTime)}
+          </div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            ${c.hours} of sleep
+          </div>
+        `;
+        cyclesGrid.appendChild(card);
+      });
+    }
+
+    tabWakeTime.addEventListener('click', () => {
+      currentMode = 'wake';
+      tabWakeTime.classList.add('bg-white', 'dark:bg-emerald-500', 'text-slate-900', 'dark:text-slate-950', 'shadow-sm');
+      tabWakeTime.classList.remove('text-slate-600', 'dark:text-slate-400');
+      tabBedNow.classList.remove('bg-white', 'dark:bg-emerald-500', 'text-slate-900', 'dark:text-slate-950', 'shadow-sm');
+      tabBedNow.classList.add('text-slate-600', 'dark:text-slate-400');
+      wakeTimeSection.classList.remove('hidden');
+      calculateBedtimes();
+    });
+
+    tabBedNow.addEventListener('click', () => {
+      currentMode = 'now';
+      tabBedNow.classList.add('bg-white', 'dark:bg-emerald-500', 'text-slate-900', 'dark:text-slate-950', 'shadow-sm');
+      tabBedNow.classList.remove('text-slate-600', 'dark:text-slate-400');
+      tabWakeTime.classList.remove('bg-white', 'dark:bg-emerald-500', 'text-slate-900', 'dark:text-slate-950', 'shadow-sm');
+      tabWakeTime.classList.add('text-slate-600', 'dark:text-slate-400');
+      wakeTimeSection.classList.add('hidden');
+      calculateWakeTimesFromNow();
+    });
+
+    wakeInputTime.addEventListener('input', calculateBedtimes);
+
+    // Initial calculation
+    calculateBedtimes();
+  </script>
+</body>
+</html>

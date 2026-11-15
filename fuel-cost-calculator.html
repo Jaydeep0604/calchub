@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fuel Cost & Trip Commute Calculator - Gas Mileage & Carpool Split</title>
+  <meta name="description" content="Calculate your total gas and fuel costs for daily office commutes or road trips. Split fuel costs with passengers and project monthly expenses. Metric and Imperial.">
+  <meta name="keywords" content="fuel cost calculator, gas trip calculator, commute cost calculator, carpool split, mpg gas calculator, metric fuel calculator">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#080c14', 800: '#0f172a', 700: '#1e293b', 600: '#334155' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="tip-bill-split-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Tip Splitter</a>
+        <a href="percentage-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Daily Math</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Title & Unit Switcher -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="fuel_title">Fuel Cost & Commute</span>
+    </nav>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="fuel_title">Fuel Cost & Commute Calculator</h1>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+            🚗 Travel & Commute
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="fuel_sub">Calculate trip fuel expenses, split gas with passengers, and estimate monthly driving budgets.</p>
+      </div>
+
+      <!-- Unit Switcher -->
+      <div class="unit-toggle w-full sm:w-auto" id="unitToggle">
+        <button type="button" class="unit-toggle-btn active" id="btnImperial" data-unit="imperial" data-i18n="unit_imperial">Imperial (mi, gal, MPG)</button>
+        <button type="button" class="unit-toggle-btn" id="btnMetric" data-unit="metric" data-i18n="unit_metric">Metric (km, L, km/L)</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      
+      <!-- Left Column: Inputs -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <span>⛽</span> Trip & Vehicle Inputs
+        </h2>
+
+        <div class="space-y-6">
+          <!-- Trip Type Toggle -->
+          <div>
+            <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2">Trip Type</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" id="btnOneWay" class="trip-type-btn py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 bg-slate-900 text-white dark:bg-cyan-500 dark:text-slate-950 transition" data-i18n="trip_one_way">One-Way</button>
+              <button type="button" id="btnRoundTrip" class="trip-type-btn py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition" data-i18n="trip_round_trip">Round Trip (2x)</button>
+            </div>
+          </div>
+
+          <!-- Distance -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label for="tripDistance" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="fuel_distance">Trip Distance</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="tripDistance" value="120" min="1" step="5"
+                  class="w-24 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                <span class="text-slate-500 font-normal" id="distUnitText">miles</span>
+              </div>
+            </div>
+            <input type="range" id="distanceSlider" min="5" max="500" step="5" value="120" class="w-full">
+          </div>
+
+          <!-- Fuel Economy -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label for="fuelEfficiency" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="fuel_efficiency">Fuel Efficiency</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="fuelEfficiency" value="28" min="2" max="100" step="0.5"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                <span class="text-slate-500 font-normal" id="effUnitText">MPG</span>
+              </div>
+            </div>
+            <input type="range" id="efficiencySlider" min="10" max="60" step="1" value="28" class="w-full">
+            <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
+              <span>SUV / Truck (~18)</span>
+              <span>Sedan (~28)</span>
+              <span>Hybrid (~50)</span>
+            </div>
+          </div>
+
+          <!-- Gas Price -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label for="gasPrice" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="fuel_price">Fuel Price</label>
+              <div class="flex items-center gap-2">
+                <div class="relative rounded-xl shadow-sm">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                  <input type="number" id="gasPrice" value="3.50" min="0.1" step="0.05"
+                    class="w-28 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                </div>
+                <span class="text-xs text-slate-500 font-medium" id="priceUnitText">per gallon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Passengers (Carpool) -->
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center mb-2">
+              <label for="carpoolCount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="fuel_carpool">Split Ride With (Passengers)</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="carpoolCount" value="1" min="1" max="10" step="1"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none">
+                <span class="text-slate-500 font-normal" data-i18n="people">people</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+          <span>💡 Steady driving without rapid acceleration saves up to 20% on gas.</span>
+          <button id="resetBtn" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline" data-i18n="reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results Card -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="fuel_total">Total Trip Fuel Cost</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+
+          <div class="text-4xl sm:text-5xl font-black text-cyan-600 dark:text-cyan-400 tracking-tight" id="totalFuelCost">$15.00</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">To travel <span id="summaryDist" class="font-bold text-slate-900 dark:text-white">120</span> <span id="summaryDistUnit">miles</span> (<span id="summaryTripType">one-way</span>)</p>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="fuel_required">Fuel Required</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="fuelQuantity">4.29 gallons</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="fuel_cost_rider">Cost Per Person</span>
+              <span class="font-black text-emerald-600 dark:text-emerald-400 text-lg" id="costPerRider">$15.00</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400">Cost Per Distance Unit</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="costPerUnit">$0.13 / mile</span>
+            </div>
+            <div class="flex justify-between items-center pt-2.5 border-t border-slate-100 dark:border-slate-800">
+              <span class="font-bold text-slate-900 dark:text-white" data-i18n="fuel_monthly">Monthly Work Commute (20 days)</span>
+              <span class="font-black text-slate-900 dark:text-white text-base" id="monthlyCommute">$300.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Fuel Savings Advice Card -->
+        <div class="premium-card rounded-3xl p-6">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Trip Carpool Math</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Splitting with <span id="passCountSummary" class="font-bold text-slate-900 dark:text-white">1</span> rider saves everyone money. Each person only sends <span id="splitPill" class="font-black text-cyan-600 dark:text-cyan-400">$15.00</span> on Venmo or CashApp.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User-Friendly Explanation Section -->
+    <article class="mt-10 premium-card rounded-3xl p-6 sm:p-10 space-y-8">
+      <div>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">How Does Fuel Cost Calculation Work?</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Planning a road trip with friends or budgeting your daily office drive? Calculating fuel cost requires three straightforward variables:
+        </p>
+      </div>
+
+      <!-- 3-Step Visual Breakdown -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">1</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Determine Volume Needed</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Divide distance by your vehicle efficiency (e.g., 120 miles ÷ 28 MPG = 4.29 gallons; or 200 km ÷ 14 km/L = 14.28 Liters).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">2</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Multiply by Pump Price</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Multiply volume by price per gallon or liter (e.g., 4.29 gal × $3.50 = $15.00 total trip fuel).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">3</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Split Fairly with Carpool</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Divide the total cost by the number of friends in the car so everyone chips in an exact fair share.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All calculations are for educational purposes.
+  </footer>
+
+  <script>
+    let currentUnit = 'imperial';
+    let isRoundTrip = false;
+
+    const btnImperial = document.getElementById('btnImperial');
+    const btnMetric = document.getElementById('btnMetric');
+    const btnOneWay = document.getElementById('btnOneWay');
+    const btnRoundTrip = document.getElementById('btnRoundTrip');
+
+    const tripDistanceInput = document.getElementById('tripDistance');
+    const distanceSlider = document.getElementById('distanceSlider');
+    const fuelEfficiencyInput = document.getElementById('fuelEfficiency');
+    const efficiencySlider = document.getElementById('efficiencySlider');
+    const gasPriceInput = document.getElementById('gasPrice');
+    const carpoolCountInput = document.getElementById('carpoolCount');
+    const resetBtn = document.getElementById('resetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const distUnitText = document.getElementById('distUnitText');
+    const effUnitText = document.getElementById('effUnitText');
+    const priceUnitText = document.getElementById('priceUnitText');
+
+    const totalFuelCostEl = document.getElementById('totalFuelCost');
+    const summaryDistEl = document.getElementById('summaryDist');
+    const summaryDistUnitEl = document.getElementById('summaryDistUnit');
+    const summaryTripTypeEl = document.getElementById('summaryTripType');
+    const fuelQuantityEl = document.getElementById('fuelQuantity');
+    const costPerRiderEl = document.getElementById('costPerRider');
+    const costPerUnitEl = document.getElementById('costPerUnit');
+    const monthlyCommuteEl = document.getElementById('monthlyCommute');
+    const passCountSummaryEl = document.getElementById('passCountSummary');
+    const splitPillEl = document.getElementById('splitPill');
+
+    function calculateFuel() {
+      const baseDistance = Math.max(0, parseFloat(tripDistanceInput.value) || 0);
+      const effectiveDistance = isRoundTrip ? baseDistance * 2 : baseDistance;
+      const efficiency = Math.max(0.5, parseFloat(fuelEfficiencyInput.value) || 1);
+      const price = Math.max(0, parseFloat(gasPriceInput.value) || 0);
+      const passengers = Math.max(1, parseInt(carpoolCountInput.value) || 1);
+
+      summaryDistEl.textContent = effectiveDistance;
+      summaryDistUnitEl.textContent = currentUnit === 'imperial' ? 'miles' : 'km';
+      summaryTripTypeEl.textContent = isRoundTrip ? 'round-trip' : 'one-way';
+      passCountSummaryEl.textContent = passengers;
+
+      const fuelNeeded = effectiveDistance / efficiency;
+      const totalCost = fuelNeeded * price;
+      const perRider = totalCost / passengers;
+      const monthlyCost = totalCost * 20;
+      const costPerUnit = effectiveDistance > 0 ? (totalCost / effectiveDistance) : 0;
+
+      totalFuelCostEl.textContent = CalcCurrency.format(totalCost);
+      const unitLabel = currentUnit === 'imperial' ? 'gallons' : 'liters';
+      fuelQuantityEl.textContent = fuelNeeded.toFixed(2) + ' ' + unitLabel;
+      costPerRiderEl.textContent = CalcCurrency.format(perRider);
+      splitPillEl.textContent = CalcCurrency.format(perRider);
+      costPerUnitEl.textContent = CalcCurrency.format(costPerUnit) + (currentUnit === 'imperial' ? ' / mi' : ' / km');
+      monthlyCommuteEl.textContent = CalcCurrency.format(monthlyCost);
+    }
+
+    function sync(input, slider) {
+      input.addEventListener('input', () => { slider.value = input.value; calculateFuel(); });
+      slider.addEventListener('input', () => { input.value = slider.value; calculateFuel(); });
+    }
+
+    sync(tripDistanceInput, distanceSlider);
+    sync(fuelEfficiencyInput, efficiencySlider);
+    gasPriceInput.addEventListener('input', calculateFuel);
+    carpoolCountInput.addEventListener('input', calculateFuel);
+
+    // Trip type toggles
+    btnOneWay.addEventListener('click', () => {
+      isRoundTrip = false;
+      btnOneWay.classList.add('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnOneWay.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      btnRoundTrip.classList.remove('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnRoundTrip.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      calculateFuel();
+    });
+
+    btnRoundTrip.addEventListener('click', () => {
+      isRoundTrip = true;
+      btnRoundTrip.classList.add('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnRoundTrip.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      btnOneWay.classList.remove('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnOneWay.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      calculateFuel();
+    });
+
+    // Unit toggle logic
+    function setUnit(unit) {
+      if (unit === currentUnit) return;
+      currentUnit = unit;
+
+      if (unit === 'metric') {
+        btnMetric.classList.add('active');
+        btnImperial.classList.remove('active');
+        distUnitText.textContent = 'km';
+        effUnitText.textContent = 'km/L';
+        priceUnitText.textContent = 'per liter';
+
+        // Convert 120 miles -> ~193 km
+        const miles = parseFloat(tripDistanceInput.value) || 120;
+        const km = Math.round(miles * 1.60934);
+        tripDistanceInput.value = km;
+        distanceSlider.max = "800";
+        distanceSlider.value = km;
+
+        // Convert 28 mpg -> ~12 km/L
+        const mpg = parseFloat(fuelEfficiencyInput.value) || 28;
+        const kmL = (mpg * 0.425144).toFixed(1);
+        fuelEfficiencyInput.value = kmL;
+        efficiencySlider.max = "30";
+        efficiencySlider.value = Math.round(kmL);
+
+        // Price per gal -> price per liter (~/3.785)
+        const priceGal = parseFloat(gasPriceInput.value) || 3.50;
+        gasPriceInput.value = (priceGal / 3.78541).toFixed(2);
+      } else {
+        btnImperial.classList.add('active');
+        btnMetric.classList.remove('active');
+        distUnitText.textContent = 'miles';
+        effUnitText.textContent = 'MPG';
+        priceUnitText.textContent = 'per gallon';
+
+        // Convert km -> miles
+        const km = parseFloat(tripDistanceInput.value) || 193;
+        const miles = Math.round(km / 1.60934);
+        tripDistanceInput.value = miles;
+        distanceSlider.max = "500";
+        distanceSlider.value = miles;
+
+        // Convert km/L -> mpg
+        const kmL = parseFloat(fuelEfficiencyInput.value) || 12;
+        const mpg = Math.round(kmL / 0.425144);
+        fuelEfficiencyInput.value = mpg;
+        efficiencySlider.max = "60";
+        efficiencySlider.value = mpg;
+
+        // Price per liter -> price per gal
+        const priceL = parseFloat(gasPriceInput.value) || 0.92;
+        gasPriceInput.value = (priceL * 3.78541).toFixed(2);
+      }
+
+      calculateFuel();
+    }
+
+    btnImperial.addEventListener('click', () => setUnit('imperial'));
+    btnMetric.addEventListener('click', () => setUnit('metric'));
+
+    resetBtn.addEventListener('click', () => {
+      if (currentUnit === 'imperial') {
+        tripDistanceInput.value = '120';
+        distanceSlider.value = '120';
+        fuelEfficiencyInput.value = '28';
+        efficiencySlider.value = '28';
+        gasPriceInput.value = '3.50';
+      } else {
+        tripDistanceInput.value = '200';
+        distanceSlider.value = '200';
+        fuelEfficiencyInput.value = '14';
+        efficiencySlider.value = '14';
+        gasPriceInput.value = '1.45';
+      }
+      carpoolCountInput.value = '1';
+      isRoundTrip = false;
+      btnOneWay.click();
+      calculateFuel();
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const text = `⛽ Trip Fuel Cost Breakdown:\n` +
+        `• Distance: ${summaryDistEl.textContent} ${summaryDistUnitEl.textContent} (${summaryTripTypeEl.textContent})\n` +
+        `• Fuel Needed: ${fuelQuantityEl.textContent}\n` +
+        `• Total Fuel Cost: ${totalFuelCostEl.textContent}\n` +
+        `• Cost Per Rider (${carpoolCountInput.value} people): ${costPerRiderEl.textContent}\n` +
+        `• Cost Per Unit: ${costPerUnitEl.textContent}\n` +
+        `Calculated via CalcHub Fuel Tool.`;
+      navigator.clipboard.writeText(text).then(() => {
+        window.showToast('Fuel cost summary copied!');
+      });
+    });
+
+    window.addEventListener('currencyChanged', calculateFuel);
+    calculateFuel();
+  </script>
+</body>
+</html>

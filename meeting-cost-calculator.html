@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Meeting Cost Calculator - Live Employee Salary Cost Tracker</title>
+  <meta name="description" content="Calculate the true financial cost of corporate meetings based on attendee count, average salaries, and duration. Live ticker stopwatch included. Free and private.">
+  <meta name="keywords" content="meeting cost calculator, corporate meeting cost, salary cost of meetings, meeting waste calculator, office productivity, live meeting ticker">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#080c14', 800: '#0f172a', 700: '#1e293b', 600: '#334155' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="salary-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Salary Converter</a>
+        <a href="profit-margin-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Profit Margin</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="meeting_title">Corporate Meeting Cost</span>
+    </nav>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="meeting_title">Meeting Cost Calculator</h1>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+            🏢 Corporate & Teams
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="meeting_sub">Discover the exact employee salary cost of your office standups, Zoom syncs, and board meetings.</p>
+      </div>
+
+      <!-- Wage Mode Toggle -->
+      <div class="unit-toggle w-full sm:w-auto" id="wageModeToggle">
+        <button type="button" class="unit-toggle-btn active" id="btnHourly" data-mode="hourly" data-i18n="salary_mode_hourly">Hourly Wage</button>
+        <button type="button" class="unit-toggle-btn" id="btnAnnual" data-mode="annual" data-i18n="salary_mode_annual">Annual Salary</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      
+      <!-- Left Column: Inputs -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <span>👥</span> Meeting Parameters
+        </h2>
+
+        <div class="space-y-6">
+          <!-- Attendees -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="attendeeCount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="meeting_attendees">Number of Attendees</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="attendeeCount" value="6" min="1" max="250" step="1"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                <span class="text-slate-500 font-normal" data-i18n="people">people</span>
+              </div>
+            </div>
+            <input type="range" id="attendeeSlider" min="2" max="50" step="1" value="6" class="w-full">
+          </div>
+
+          <!-- Average Rate / Salary -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="wageInput" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" id="wageLabel" data-i18n="meeting_wage">Average Hourly Rate per Person</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="wageInput" value="45.00" min="5" step="1"
+                  class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+              </div>
+            </div>
+            <input type="range" id="wageSlider" min="10" max="200" step="1" value="45" class="w-full">
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1" id="wageEquivText">Equivalent to approx $93,600 / year per participant (2,080 annual work hours).</p>
+          </div>
+
+          <!-- Duration -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="meetingDuration" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="meeting_duration">Planned Duration</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="meetingDuration" value="45" min="5" max="480" step="5"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                <span class="text-slate-500 font-normal" data-i18n="minutes">minutes</span>
+              </div>
+            </div>
+            <input type="range" id="durationSlider" min="15" max="180" step="15" value="45" class="w-full">
+            <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
+              <span>15 min (Standup)</span>
+              <span>45 min</span>
+              <span>3 hr (Workshop)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+          <span>💡 Keeping meetings under 30 minutes saves up to 40% in engineering productivity.</span>
+          <button id="resetBtn" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline" data-i18n="reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results & Live Ticker -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Static Cost Card -->
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="meeting_total">Total Meeting Cost</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+
+          <div class="text-4xl sm:text-5xl font-black text-cyan-600 dark:text-cyan-400 tracking-tight" id="totalCost">$202.50</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">For a <span id="summaryDuration" class="font-bold text-slate-900 dark:text-white">45</span> min meeting with <span id="summaryPeople" class="font-bold text-slate-900 dark:text-white">6</span> people</p>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="meeting_cost_min">Cost Per Minute</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="costPerMin">$4.50 / min</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="meeting_cost_person">Cost Per Person</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="costPerPerson">$33.75</span>
+            </div>
+            <div class="flex justify-between items-center pt-2.5 border-t border-slate-100 dark:border-slate-800">
+              <span class="font-bold text-slate-900 dark:text-white" data-i18n="meeting_annual">Annual Cost (If held weekly)</span>
+              <span class="font-black text-indigo-600 dark:text-indigo-400 text-base" id="annualCost">$10,530.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Human-Centric Feature: Live Stopwatch Meeting Cost Ticker -->
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-slate-900 text-white dark:bg-slate-900 border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider" data-i18n="meeting_ticker_live">Live Meeting Ticker</span>
+            </div>
+            <span class="font-mono text-xs text-slate-400" id="tickerTimer">00:00:00</span>
+          </div>
+
+          <div class="text-3xl sm:text-4xl font-black text-emerald-400 tracking-tight" id="liveTickerCost">$0.00</div>
+          <p class="text-xs text-slate-400 mt-1">Real-time salary expenditure while this meeting is underway.</p>
+
+          <div class="mt-4 flex gap-2">
+            <button type="button" id="startTickerBtn" class="flex-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs transition" data-i18n="meeting_timer_start">▶ Start Ticker</button>
+            <button type="button" id="pauseTickerBtn" class="hidden flex-1 py-2 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs transition" data-i18n="meeting_timer_pause">⏸ Pause</button>
+            <button type="button" id="resetTickerBtn" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition" data-i18n="meeting_timer_reset">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User-Friendly Friendly Explanation Section -->
+    <article class="mt-10 premium-card rounded-3xl p-6 sm:p-10 space-y-8">
+      <div>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Why Corporate Meeting Costs Matter</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Time is the single most expensive operating expense in knowledge work. When six people attend an hour-long meeting, the organization doesn't spend 1 hour: it spends 6 hours of collective output.
+        </p>
+      </div>
+
+      <!-- 3-Step Visual Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">1</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Calculate Hourly Aggregate</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Multiply headcount by average hourly wage (6 people × $50/hr = $300/hour total room cost).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">2</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Factor in Duration</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Multiply the room cost per hour by the duration (45 minutes = 0.75 hours × $300 = $225).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">3</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Account for Cadence</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">A weekly recurring 45-minute sync equals 52 meetings = $11,700 every single year!</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All calculations are for educational purposes.
+  </footer>
+
+  <script>
+    let wageMode = 'hourly'; // 'hourly' or 'annual'
+
+    const btnHourly = document.getElementById('btnHourly');
+    const btnAnnual = document.getElementById('btnAnnual');
+    const wageLabel = document.getElementById('wageLabel');
+    const wageInput = document.getElementById('wageInput');
+    const wageSlider = document.getElementById('wageSlider');
+    const wageEquivText = document.getElementById('wageEquivText');
+
+    const attendeeCountInput = document.getElementById('attendeeCount');
+    const attendeeSlider = document.getElementById('attendeeSlider');
+    const meetingDurationInput = document.getElementById('meetingDuration');
+    const durationSlider = document.getElementById('durationSlider');
+    const resetBtn = document.getElementById('resetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const totalCostEl = document.getElementById('totalCost');
+    const summaryDurationEl = document.getElementById('summaryDuration');
+    const summaryPeopleEl = document.getElementById('summaryPeople');
+    const costPerMinEl = document.getElementById('costPerMin');
+    const costPerPersonEl = document.getElementById('costPerPerson');
+    const annualCostEl = document.getElementById('annualCost');
+
+    // Live Ticker elements
+    let tickerInterval = null;
+    let tickerElapsedSeconds = 0;
+    const liveTickerCostEl = document.getElementById('liveTickerCost');
+    const tickerTimerEl = document.getElementById('tickerTimer');
+    const startTickerBtn = document.getElementById('startTickerBtn');
+    const pauseTickerBtn = document.getElementById('pauseTickerBtn');
+    const resetTickerBtn = document.getElementById('resetTickerBtn');
+
+    function getHourlyWage() {
+      const val = parseFloat(wageInput.value) || 0;
+      return wageMode === 'hourly' ? val : (val / 2080);
+    }
+
+    function calculateMeeting() {
+      const attendees = Math.max(1, parseInt(attendeeCountInput.value) || 1);
+      const hourlyWage = Math.max(0, getHourlyWage());
+      const durationMins = Math.max(1, parseFloat(meetingDurationInput.value) || 1);
+
+      summaryPeopleEl.textContent = attendees;
+      summaryDurationEl.textContent = durationMins;
+
+      const costPerMin = (attendees * hourlyWage) / 60;
+      const totalCost = costPerMin * durationMins;
+      const costPerPerson = totalCost / attendees;
+      const annualCost = totalCost * 52;
+
+      totalCostEl.textContent = CalcCurrency.format(totalCost);
+      costPerMinEl.textContent = CalcCurrency.format(costPerMin) + ' / min';
+      costPerPersonEl.textContent = CalcCurrency.format(costPerPerson);
+      annualCostEl.textContent = CalcCurrency.format(annualCost);
+
+      if (wageMode === 'hourly') {
+        const annualEquiv = hourlyWage * 2080;
+        wageEquivText.textContent = `Equivalent to approx ${CalcCurrency.format(annualEquiv, 0)} / year per participant (2,080 work hrs).`;
+      } else {
+        wageEquivText.textContent = `Equivalent to approx ${CalcCurrency.format(hourlyWage)} / hour per participant.`;
+      }
+
+      updateLiveTickerDisplay();
+    }
+
+    function sync(input, slider) {
+      input.addEventListener('input', () => { slider.value = input.value; calculateMeeting(); });
+      slider.addEventListener('input', () => { input.value = slider.value; calculateMeeting(); });
+    }
+
+    sync(attendeeCountInput, attendeeSlider);
+    sync(meetingDurationInput, durationSlider);
+    sync(wageInput, wageSlider);
+
+    // Wage Mode Switching
+    function setWageMode(mode) {
+      if (mode === wageMode) return;
+      wageMode = mode;
+
+      if (mode === 'annual') {
+        btnAnnual.classList.add('active');
+        btnHourly.classList.remove('active');
+        wageLabel.textContent = 'Average Annual Salary per Person';
+        const hourly = parseFloat(wageInput.value) || 45;
+        const annual = Math.round(hourly * 2080);
+        wageInput.value = annual;
+        wageSlider.min = "20000";
+        wageSlider.max = "300000";
+        wageSlider.step = "5000";
+        wageSlider.value = annual;
+      } else {
+        btnHourly.classList.add('active');
+        btnAnnual.classList.remove('active');
+        wageLabel.textContent = 'Average Hourly Rate per Person';
+        const annual = parseFloat(wageInput.value) || 93600;
+        const hourly = Math.round(annual / 2080);
+        wageInput.value = hourly;
+        wageSlider.min = "10";
+        wageSlider.max = "200";
+        wageSlider.step = "1";
+        wageSlider.value = hourly;
+      }
+      calculateMeeting();
+    }
+
+    btnHourly.addEventListener('click', () => setWageMode('hourly'));
+    btnAnnual.addEventListener('click', () => setWageMode('annual'));
+
+    // Live Ticker Logic
+    function updateLiveTickerDisplay() {
+      const attendees = Math.max(1, parseInt(attendeeCountInput.value) || 1);
+      const hourlyWage = Math.max(0, getHourlyWage());
+      const costPerSec = (attendees * hourlyWage) / 3600;
+      const currentSpent = costPerSec * tickerElapsedSeconds;
+
+      liveTickerCostEl.textContent = CalcCurrency.format(currentSpent);
+
+      const hrs = String(Math.floor(tickerElapsedSeconds / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((tickerElapsedSeconds % 3600) / 60)).padStart(2, '0');
+      const secs = String(tickerElapsedSeconds % 60).padStart(2, '0');
+      tickerTimerEl.textContent = `${hrs}:${mins}:${secs}`;
+    }
+
+    startTickerBtn.addEventListener('click', () => {
+      if (!tickerInterval) {
+        tickerInterval = setInterval(() => {
+          tickerElapsedSeconds++;
+          updateLiveTickerDisplay();
+        }, 1000);
+        startTickerBtn.classList.add('hidden');
+        pauseTickerBtn.classList.remove('hidden');
+      }
+    });
+
+    pauseTickerBtn.addEventListener('click', () => {
+      if (tickerInterval) {
+        clearInterval(tickerInterval);
+        tickerInterval = null;
+        pauseTickerBtn.classList.add('hidden');
+        startTickerBtn.classList.remove('hidden');
+        startTickerBtn.textContent = '▶ Resume Ticker';
+      }
+    });
+
+    resetTickerBtn.addEventListener('click', () => {
+      if (tickerInterval) {
+        clearInterval(tickerInterval);
+        tickerInterval = null;
+      }
+      tickerElapsedSeconds = 0;
+      pauseTickerBtn.classList.add('hidden');
+      startTickerBtn.classList.remove('hidden');
+      startTickerBtn.textContent = '▶ Start Ticker';
+      updateLiveTickerDisplay();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      attendeeCountInput.value = '6';
+      attendeeSlider.value = '6';
+      meetingDurationInput.value = '45';
+      durationSlider.value = '45';
+      if (wageMode === 'hourly') {
+        wageInput.value = '45';
+        wageSlider.value = '45';
+      } else {
+        wageInput.value = '93600';
+        wageSlider.value = '93600';
+      }
+      calculateMeeting();
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const text = `📊 Meeting Cost Summary:\n` +
+        `• Attendees: ${summaryPeopleEl.textContent} people\n` +
+        `• Duration: ${summaryDurationEl.textContent} minutes\n` +
+        `• Cost Per Minute: ${costPerMinEl.textContent}\n` +
+        `• Total Cost: ${totalCostEl.textContent}\n` +
+        `• Annual Recurring (52x): ${annualCostEl.textContent}\n` +
+        `Calculated via CalcHub Meeting Cost Tool.`;
+      navigator.clipboard.writeText(text).then(() => {
+        window.showToast('Meeting cost summary copied for Slack!');
+      });
+    });
+
+    window.addEventListener('currencyChanged', calculateMeeting);
+    calculateMeeting();
+  </script>
+</body>
+</html>

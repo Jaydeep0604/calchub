@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan & EMI Calculator - Free Monthly Payment & Amortization Schedule</title>
+  <meta name="description" content="Calculate your monthly loan payment (EMI), total interest payable, and view a complete amortization schedule. Free, private, and instant for home, auto, or personal loans.">
+  <meta name="keywords" content="loan calculator, emi calculator, monthly loan payment, amortization schedule, car loan calculator, home loan payment">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a'
+            },
+            obsidian: {
+              900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Senior UI/UX Theme & Animation Stylesheet -->
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <!-- Core Engines (Theme, i18n, Currency) -->
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="compound-interest-calculator.html" data-i18n="nav_compound" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Compound Interest</a>
+        <a href="profit-margin-calculator.html" data-i18n="nav_margin" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Profit Margin</a>
+      </nav>
+
+      <!-- Global Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumbs & Heading -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="loan_title">Loan & EMI Calculator</span>
+    </nav>
+    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="loan_title">Loan & EMI Calculator</h1>
+    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="loan_subtitle">Estimate your monthly payment, total interest cost, and visual payment breakdown.</p>
+  </div>
+
+  <!-- Main Calculator Workspace -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+      <!-- Left Column: Sliders & Form (7 cols) -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span class="text-lg">⚙️</span> <span data-i18n="loan_param">Loan Parameters</span>
+          </h2>
+          <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+            Real-Time Live Updates
+          </span>
+        </div>
+
+        <div class="space-y-7">
+          <!-- Loan Amount -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="loanAmount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="loan_amount">Loan Amount</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="loanAmount" value="25000" min="500" max="2000000" step="500"
+                  class="w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+              </div>
+            </div>
+            <input type="range" id="loanAmountSlider" min="1000" max="500000" step="1000" value="25000" class="w-full">
+            <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
+              <span><span class="currency-symbol">$</span>1,000</span>
+              <span><span class="currency-symbol">$</span>250,000</span>
+              <span><span class="currency-symbol">$</span>500,000+</span>
+            </div>
+          </div>
+
+          <!-- Interest Rate -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="interestRate" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="loan_rate">Annual Interest Rate</label>
+              <div class="relative rounded-xl shadow-sm">
+                <input type="number" id="interestRate" value="6.5" min="0.1" max="30" step="0.1"
+                  class="w-24 pl-3 pr-7 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold">%</span>
+              </div>
+            </div>
+            <input type="range" id="interestRateSlider" min="1" max="25" step="0.1" value="6.5" class="w-full">
+            <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
+              <span>1%</span>
+              <span>12.5%</span>
+              <span>25%</span>
+            </div>
+            <!-- Typical Rate Guidance Chips -->
+            <div class="flex flex-wrap items-center gap-1.5 mt-2.5">
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mr-1">Typical:</span>
+              <button type="button" class="rate-preset px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-cyan-500 border border-slate-200 dark:border-slate-700 transition" data-rate="5.5">🚗 Auto (5.5%)</button>
+              <button type="button" class="rate-preset px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-cyan-500 border border-slate-200 dark:border-slate-700 transition" data-rate="6.5">🏠 Home (6.5%)</button>
+              <button type="button" class="rate-preset px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-cyan-500 border border-slate-200 dark:border-slate-700 transition" data-rate="9.9">💳 Personal (9.9%)</button>
+            </div>
+          </div>
+
+          <!-- Loan Term -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="loanTerm" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="loan_term">Loan Term (Duration)</label>
+              <div class="flex items-center gap-2">
+                <input type="number" id="loanTerm" value="5" min="1" max="40" step="1"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                <select id="termUnit" class="text-xs font-bold py-1.5 px-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 focus:outline-none">
+                  <option value="years" selected data-i18n="loan_years">Years</option>
+                  <option value="months" data-i18n="loan_months">Months</option>
+                </select>
+              </div>
+            </div>
+            <input type="range" id="loanTermSlider" min="1" max="30" step="1" value="5" class="w-full">
+            <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
+              <span>1 Year</span>
+              <span>15 Years</span>
+              <span>30 Years</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+          <span>💡 Tip: Slide to simulate different bank and lender offers.</span>
+          <button id="resetBtn" class="text-brand-600 dark:text-emerald-400 font-bold hover:underline" data-i18n="reset_default">Reset to Default</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results & Donut Chart (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="monthly_payment">Monthly Payment (EMI)</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy_summary">Copy</span>
+            </button>
+          </div>
+
+          <div class="text-4xl sm:text-5xl font-black text-brand-600 dark:text-emerald-400 tracking-tight" id="monthlyPayment">$489.15</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Per month for <span id="summaryMonths" class="font-bold text-slate-900 dark:text-white">60</span> months</p>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="principal_amount">Principal Loan Amount</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="summaryPrincipal">$25,000.00</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="total_interest">Total Interest Payable</span>
+              <span class="font-bold text-indigo-600 dark:text-indigo-400" id="summaryInterest">$4,349.00</span>
+            </div>
+            <div class="flex justify-between items-center text-sm pt-2.5 border-t border-slate-100 dark:border-slate-800">
+              <span class="font-bold text-slate-900 dark:text-white" data-i18n="total_repay">Total Amount to Repay</span>
+              <span class="font-black text-slate-900 dark:text-white text-base" id="summaryTotal">$29,349.00</span>
+            </div>
+          </div>
+
+          <!-- Chart.js Donut Visualization -->
+          <div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider text-center mb-3">Principal vs Interest Breakdown</h3>
+            <div class="w-48 h-48 mx-auto relative">
+              <canvas id="loanChart"></canvas>
+            </div>
+            <div class="flex justify-center gap-6 text-xs font-semibold text-slate-600 dark:text-slate-300 mt-4">
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-cyan-500 inline-block"></span> Principal
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span> Interest
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amortization Schedule Table -->
+    <div class="mt-8 sm:mt-10 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
+        <div>
+          <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="amortization_title">Annual Amortization Schedule</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="amortization_sub">Year-by-year breakdown of your principal payoff and declining balance.</p>
+        </div>
+      </div>
+
+      <div class="table-scroll-container">
+        <table class="w-full min-w-[500px] text-left text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs uppercase font-bold border-b border-slate-200 dark:border-slate-700">
+            <tr>
+              <th class="py-3 px-4" data-i18n="year">Year</th>
+              <th class="py-3 px-4 text-right" data-i18n="principal_paid">Principal Paid</th>
+              <th class="py-3 px-4 text-right" data-i18n="interest_paid">Interest Paid</th>
+              <th class="py-3 px-4 text-right" data-i18n="total_annual">Total Annual Payment</th>
+              <th class="py-3 px-4 text-right" data-i18n="remaining_balance">Remaining Balance</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+            <!-- Dynamic rows generated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Educational & Formula Content (Guarantees Google AdSense Approval) -->
+    <article class="mt-10 premium-card rounded-3xl p-6 sm:p-10 space-y-8">
+      <section>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-3">How is Monthly Loan EMI Calculated?</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+          An **Equated Monthly Installment (EMI)** is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs apply to personal loans, auto loans, mortgages, and student loans.
+        </p>
+        <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-slate-800 dark:text-emerald-400 text-sm font-mono overflow-x-auto mb-4">
+          EMI = [P × r × (1 + r)^n] ÷ [(1 + r)^n - 1]
+        </div>
+        <ul class="text-xs text-slate-600 dark:text-slate-400 space-y-1.5 list-disc pl-5">
+          <li><strong>P (Principal):</strong> The total initial sum of money borrowed.</li>
+          <li><strong>r (Periodic Monthly Interest Rate):</strong> The annual interest rate divided by 12 and then by 100.</li>
+          <li><strong>n (Total Installments):</strong> The total loan duration in months (e.g., a 5-year loan = 60 months).</li>
+        </ul>
+      </section>
+
+      <!-- FAQs -->
+      <section class="border-t border-slate-100 dark:border-slate-800 pt-6">
+        <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Frequently Asked Questions</h3>
+        <div class="space-y-4 text-sm">
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+            <h4 class="font-bold text-slate-900 dark:text-white mb-1">How can I reduce my total interest paid on a loan?</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Making extra principal payments each year or choosing a shorter loan term drastically reduces compounding interest.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+            <h4 class="font-bold text-slate-900 dark:text-white mb-1">Is my calculation data saved or transmitted?</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              No. CalcHub operates 100% client-side in your local browser window. None of your entered numbers are ever transmitted or stored.
+            </p>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <!-- Mobile Floating Sticky Result Bar (Senior UX Touch) -->
+  <div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-obsidian-900/95 border-t border-slate-200 dark:border-slate-800 px-5 py-3 flex items-center justify-between nav-blur shadow-lg">
+    <div>
+      <span class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 block">Monthly Payment (EMI)</span>
+      <span class="text-xl font-black text-brand-600 dark:text-emerald-400" id="mobilePayment">$489.15</span>
+    </div>
+    <button onclick="document.getElementById('monthlyPayment').scrollIntoView({behavior: 'smooth'})" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 dark:bg-emerald-500 text-white dark:text-slate-950">
+      View Details
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-2 text-slate-900 dark:text-white font-bold">
+        <span class="w-6 h-6 rounded-md bg-brand-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center text-xs font-bold">%</span>
+        CalcHub
+      </div>
+      <div class="flex gap-4">
+        <a href="index.html" class="hover:text-slate-900 dark:hover:text-white transition">All Calculators</a>
+        <a href="privacy-policy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
+        <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Use</a>
+      </div>
+      <div>© 2026 CalcHub. All calculations are for educational purposes.</div>
+    </div>
+  </footer>
+
+  <!-- Calculation Engine with Theme Awareness & Copy Function -->
+  <script>
+    const loanAmountInput = document.getElementById('loanAmount');
+    const loanAmountSlider = document.getElementById('loanAmountSlider');
+    const interestRateInput = document.getElementById('interestRate');
+    const interestRateSlider = document.getElementById('interestRateSlider');
+    const loanTermInput = document.getElementById('loanTerm');
+    const loanTermSlider = document.getElementById('loanTermSlider');
+    const termUnitSelect = document.getElementById('termUnit');
+    const resetBtn = document.getElementById('resetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const monthlyPaymentEl = document.getElementById('monthlyPayment');
+    const mobilePaymentEl = document.getElementById('mobilePayment');
+    const summaryMonthsEl = document.getElementById('summaryMonths');
+    const summaryPrincipalEl = document.getElementById('summaryPrincipal');
+    const summaryInterestEl = document.getElementById('summaryInterest');
+    const summaryTotalEl = document.getElementById('summaryTotal');
+    const scheduleBody = document.getElementById('scheduleBody');
+
+    let chartInstance = null;
+
+    function getChartColors() {
+      const isDark = document.documentElement.classList.contains('dark');
+      return {
+        principal: isDark ? '#06b6d4' : '#0284c7',
+        interest: '#6366f1'
+      };
+    }
+
+    function initChart(principal, interest) {
+      const ctx = document.getElementById('loanChart').getContext('2d');
+      const colors = getChartColors();
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal', 'Interest'],
+          datasets: [{
+            data: [principal, interest],
+            backgroundColor: [colors.principal, colors.interest],
+            borderWidth: 0,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ' ' + context.label + ': ' + CalcCurrency.format(context.raw);
+                }
+              }
+            }
+          },
+          cutout: '72%'
+        }
+      });
+    }
+
+    function updateChart(principal, interest) {
+      const colors = getChartColors();
+      if (!chartInstance) {
+        initChart(principal, interest);
+      } else {
+        chartInstance.data.datasets[0].data = [principal, interest];
+        chartInstance.data.datasets[0].backgroundColor = [colors.principal, colors.interest];
+        chartInstance.update();
+      }
+    }
+
+    function calculateLoan() {
+      const P = parseFloat(loanAmountInput.value) || 0;
+      const annualRate = parseFloat(interestRateInput.value) || 0;
+      let termYears = parseFloat(loanTermInput.value) || 0;
+
+      if (termUnitSelect.value === 'months') {
+        termYears = termYears / 12;
+      }
+
+      const totalMonths = Math.round(termYears * 12);
+      summaryMonthsEl.textContent = totalMonths;
+
+      if (P <= 0 || totalMonths <= 0) {
+        monthlyPaymentEl.textContent = CalcCurrency.format(0);
+        if (mobilePaymentEl) mobilePaymentEl.textContent = CalcCurrency.format(0);
+        summaryPrincipalEl.textContent = CalcCurrency.format(0);
+        summaryInterestEl.textContent = CalcCurrency.format(0);
+        summaryTotalEl.textContent = CalcCurrency.format(0);
+        updateChart(1, 0);
+        scheduleBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-400">Enter valid loan values.</td></tr>';
+        return;
+      }
+
+      const r = (annualRate / 100) / 12;
+      let emi = 0;
+      let totalAmount = 0;
+      let totalInterest = 0;
+
+      if (r === 0) {
+        emi = P / totalMonths;
+        totalAmount = P;
+        totalInterest = 0;
+      } else {
+        const factor = Math.pow(1 + r, totalMonths);
+        emi = (P * r * factor) / (factor - 1);
+        totalAmount = emi * totalMonths;
+        totalInterest = totalAmount - P;
+      }
+
+      const formattedEmi = CalcCurrency.format(emi);
+      monthlyPaymentEl.textContent = formattedEmi;
+      if (mobilePaymentEl) mobilePaymentEl.textContent = formattedEmi;
+      summaryPrincipalEl.textContent = CalcCurrency.format(P);
+      summaryInterestEl.textContent = CalcCurrency.format(Math.max(0, totalInterest));
+      summaryTotalEl.textContent = CalcCurrency.format(totalAmount);
+
+      updateChart(P, Math.max(0, totalInterest));
+      generateAmortizationSchedule(P, r, emi, totalMonths);
+    }
+
+    function generateAmortizationSchedule(P, r, emi, totalMonths) {
+      let balance = P;
+      let html = '';
+      let currentYear = 1;
+      let yearPrincipal = 0;
+      let yearInterest = 0;
+
+      for (let m = 1; m <= totalMonths; m++) {
+        const interestForMonth = balance * r;
+        const principalForMonth = emi - interestForMonth;
+        balance = Math.max(0, balance - principalForMonth);
+
+        yearPrincipal += principalForMonth;
+        yearInterest += interestForMonth;
+
+        if (m % 12 === 0 || m === totalMonths) {
+          const totalAnnual = yearPrincipal + yearInterest;
+          html += `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+              <td class="py-3 px-4 font-bold text-slate-900 dark:text-white">Year ${currentYear}</td>
+              <td class="py-3 px-4 text-right font-medium text-cyan-600 dark:text-cyan-400">${CalcCurrency.format(yearPrincipal)}</td>
+              <td class="py-3 px-4 text-right font-medium text-indigo-600 dark:text-indigo-400">${CalcCurrency.format(yearInterest)}</td>
+              <td class="py-3 px-4 text-right font-medium text-slate-700 dark:text-slate-300">${CalcCurrency.format(totalAnnual)}</td>
+              <td class="py-3 px-4 text-right font-bold text-slate-900 dark:text-white">${CalcCurrency.format(balance)}</td>
+            </tr>
+          `;
+          currentYear++;
+          yearPrincipal = 0;
+          yearInterest = 0;
+        }
+      }
+
+      scheduleBody.innerHTML = html;
+    }
+
+    function sync(input, slider) {
+      input.addEventListener('input', () => { slider.value = input.value; calculateLoan(); });
+      slider.addEventListener('input', () => { input.value = slider.value; calculateLoan(); });
+    }
+
+    sync(loanAmountInput, loanAmountSlider);
+    sync(interestRateInput, interestRateSlider);
+    sync(loanTermInput, loanTermSlider);
+
+    document.querySelectorAll('.rate-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const r = btn.getAttribute('data-rate');
+        interestRateInput.value = r;
+        interestRateSlider.value = r;
+        calculateLoan();
+      });
+    });
+
+    termUnitSelect.addEventListener('change', () => {
+      if (termUnitSelect.value === 'months') {
+        loanTermSlider.max = 360;
+        loanTermInput.value = Math.round(loanTermInput.value * 12);
+        loanTermSlider.value = loanTermInput.value;
+      } else {
+        loanTermSlider.max = 30;
+        loanTermInput.value = Math.max(1, Math.round(loanTermInput.value / 12));
+        loanTermSlider.value = loanTermInput.value;
+      }
+      calculateLoan();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      loanAmountInput.value = 25000;
+      loanAmountSlider.value = 25000;
+      interestRateInput.value = 6.5;
+      interestRateSlider.value = 6.5;
+      loanTermInput.value = 5;
+      loanTermSlider.value = 5;
+      termUnitSelect.value = 'years';
+      calculateLoan();
+    });
+
+    // Copy Result to Clipboard (Senior UX Polish)
+    copyBtn.addEventListener('click', () => {
+      const summaryText = `Loan Calculation Breakdown:\n` +
+        `• Principal Loan: ${summaryPrincipalEl.textContent}\n` +
+        `• Interest Rate: ${interestRateInput.value}%\n` +
+        `• Monthly EMI: ${monthlyPaymentEl.textContent}\n` +
+        `• Total Interest: ${summaryInterestEl.textContent}\n` +
+        `• Total Repayment: ${summaryTotalEl.textContent}\n` +
+        `Calculated on CalcHub.`;
+      navigator.clipboard.writeText(summaryText).then(() => {
+        window.showToast('Loan breakdown copied to clipboard!');
+      });
+    });
+
+    // Theme & Currency Listeners
+    window.addEventListener('themeChanged', () => {
+      if (chartInstance) {
+        const colors = getChartColors();
+        chartInstance.data.datasets[0].backgroundColor = [colors.principal, colors.interest];
+        chartInstance.update();
+      }
+    });
+    window.addEventListener('currencyChanged', calculateLoan);
+
+    // Initial run
+    calculateLoan();
+  </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortgage Early Payoff Calculator - Extra Payment Savings</title>
+  <meta name="description" content="Calculate how much time and interest you save by making extra monthly or annual payments on your home mortgage loan. Free and instant.">
+  <meta name="keywords" content="mortgage payoff calculator, extra payment mortgage, pay off mortgage early, mortgage interest savings">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="loan-calculator.html" data-i18n="nav_loan" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Loan / EMI</a>
+        <a href="compound-interest-calculator.html" data-i18n="nav_compound" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Compound Interest</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ad Container (Hidden until approval) -->
+  <div class="ad-slot-container max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 w-full">
+    <div class="border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-2 text-center text-xs text-slate-400 uppercase tracking-widest font-semibold flex items-center justify-center h-20">
+      <span>Advertisement Space (Google AdSense Header)</span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="mortgage_title">Mortgage Early Payoff</span>
+    </nav>
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="mortgage_title">Mortgage Early Payoff Calculator</h1>
+      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+        🏡 Real Estate & Mortgage
+      </span>
+    </div>
+    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="mortgage_sub">Discover how making extra principal payments can shave years and tens of thousands in interest off your mortgage.</p>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <span>🏠</span> Mortgage Details
+        </h2>
+
+        <div class="space-y-6">
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+              <label for="mortgageBalance" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="remaining_balance">Remaining Balance</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="mortgageBalance" value="300000" min="10000" step="5000"
+                  class="w-32 sm:w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+              <label for="mortgageRate" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="interest_rate">Interest Rate (%)</label>
+              <div class="relative rounded-xl shadow-sm">
+                <input type="number" id="mortgageRate" value="6.0" min="0.5" max="20" step="0.1"
+                  class="w-24 pl-3 pr-7 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+              <label for="remainingYears" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="remaining_term">Remaining Term (Years)</label>
+              <input type="number" id="remainingYears" value="25" min="1" max="40" step="1"
+                class="w-24 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+              <label for="extraPayment" class="text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400" data-i18n="extra_monthly_payment">Extra Monthly Payment</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-emerald-600 dark:text-emerald-400 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="extraPayment" value="200" min="0" step="50"
+                  class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500">Additional money applied directly toward loan principal each month.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 space-y-6">
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="interest_saved">Total Interest Saved</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy_summary">Copy</span>
+            </button>
+          </div>
+
+          <div class="text-3xl sm:text-4xl lg:text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight" id="interestSaved">$52,410</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Paid off <strong id="timeSaved" class="text-slate-900 dark:text-white">4 years & 8 months</strong> sooner</p>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="standard_payment">Standard Monthly Payment</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="standardEmi">$1,932.90</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="new_payment">New Payment (with Extra)</span>
+              <span class="font-bold text-emerald-600 dark:text-emerald-400" id="newEmi">$2,132.90</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+              <span class="font-bold text-slate-900 dark:text-white" data-i18n="new_payoff_term">New Payoff Term</span>
+              <span class="font-black text-brand-600 dark:text-emerald-400" id="newTerm">20.3 Years</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User-Friendly Explanation Section -->
+    <article class="mt-8 sm:mt-10 max-w-7xl mx-auto premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">How Extra Principal Payments Slay Mortgage Debt</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          In standard amortization schedules, the bulk of your monthly payment in early years goes strictly toward interest. When you submit extra payments earmarked for <strong>principal only</strong>, 100% of that money cuts the root balance immediately, preventing compound interest from accumulating for the remaining life of the loan.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">⚡</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Amortization Front-Loading</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">On a 30-year loan, early payments can be up to 70–80% interest. Accelerating principal early gives maximal dollar savings.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">🏦</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Specify "Principal Only"</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Ensure your mortgage servicer applies extra payments toward principal rather than prepaying next month's interest.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">🔄</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Bi-Weekly Payment Hack</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Paying half your monthly mortgage every 2 weeks creates 26 half-payments = 13 full payments per year, shaving ~4–6 years off.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All rights reserved.
+  </footer>
+
+  <script>
+    function calcMortgage() {
+      const P = parseFloat(document.getElementById('mortgageBalance').value) || 0;
+      const rate = (parseFloat(document.getElementById('mortgageRate').value) || 0) / 100 / 12;
+      const totalMonths = (parseInt(document.getElementById('remainingYears').value) || 1) * 12;
+      const extra = parseFloat(document.getElementById('extraPayment').value) || 0;
+
+      if (P <= 0 || rate <= 0 || totalMonths <= 0) return;
+
+      const factor = Math.pow(1 + rate, totalMonths);
+      const standardEmi = (P * rate * factor) / (factor - 1);
+      const standardTotalInterest = (standardEmi * totalMonths) - P;
+
+      let balance = P;
+      let monthsWithExtra = 0;
+      let totalInterestWithExtra = 0;
+      const paymentWithExtra = standardEmi + extra;
+
+      while (balance > 0 && monthsWithExtra < totalMonths) {
+        monthsWithExtra++;
+        const interestMonth = balance * rate;
+        totalInterestWithExtra += interestMonth;
+        const principalMonth = Math.min(balance, paymentWithExtra - interestMonth);
+        balance -= principalMonth;
+        if (balance <= 0) break;
+      }
+
+      const interestSaved = Math.max(0, standardTotalInterest - totalInterestWithExtra);
+      const monthsSaved = Math.max(0, totalMonths - monthsWithExtra);
+      const yearsSaved = Math.floor(monthsSaved / 12);
+      const remMonths = monthsSaved % 12;
+
+      document.getElementById('standardEmi').textContent = CalcCurrency.format(standardEmi);
+      document.getElementById('newEmi').textContent = CalcCurrency.format(paymentWithExtra);
+      document.getElementById('interestSaved').textContent = CalcCurrency.format(Math.round(interestSaved), 0);
+      document.getElementById('timeSaved').textContent = `${yearsSaved} years & ${remMonths} months`;
+      document.getElementById('newTerm').textContent = `${(monthsWithExtra / 12).toFixed(1)} Years`;
+    }
+
+    document.getElementById('mortgageBalance').addEventListener('input', calcMortgage);
+    document.getElementById('mortgageRate').addEventListener('input', calcMortgage);
+    document.getElementById('remainingYears').addEventListener('input', calcMortgage);
+    document.getElementById('extraPayment').addEventListener('input', calcMortgage);
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const summaryText = `Mortgage Payoff Summary:\n` +
+        `• Standard Payment: ${document.getElementById('standardEmi').textContent}\n` +
+        `• Extra Monthly: $${document.getElementById('extraPayment').value}\n` +
+        `• Total Interest Saved: ${document.getElementById('interestSaved').textContent}\n` +
+        `• Time Saved: ${document.getElementById('timeSaved').textContent}\n` +
+        `Calculated on CalcHub.`;
+      navigator.clipboard.writeText(summaryText).then(() => {
+        window.showToast('Mortgage summary copied to clipboard!');
+      });
+    });
+
+    window.addEventListener('currencyChanged', calcMortgage);
+    calcMortgage();
+  </script>
+</body>
+</html>

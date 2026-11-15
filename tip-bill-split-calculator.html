@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tip & Group Bill Split Calculator - Restaurant Dining & Food Portions</title>
+  <meta name="description" content="Split restaurant bills and calculate tips easily among friends and coworkers. Custom tip percentages and round-up options. Free, fast, and mobile-friendly.">
+  <meta name="keywords" content="tip calculator, bill split calculator, restaurant bill splitter, group dining calculator, tip percentage, round up tip">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#080c14', 800: '#0f172a', 700: '#1e293b', 600: '#334155' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="recipe-scaler-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Recipe Scaler</a>
+        <a href="percentage-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Discount Calculator</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="tip_title">Tip & Bill Split</span>
+    </nav>
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="tip_title">Tip & Bill Split Calculator</h1>
+      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+        🍲 Food & Dining
+      </span>
+    </div>
+    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="tip_sub">Easily split dinner bills and calculate fair tips with friends, family, and coworkers.</p>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      
+      <!-- Left Column: Inputs -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <span>🧾</span> Bill Details
+        </h2>
+
+        <div class="space-y-6">
+          <!-- Total Bill -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label for="billAmount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="tip_bill_amount">Total Check / Bill Amount</label>
+              <div class="relative rounded-xl shadow-sm">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                <input type="number" id="billAmount" value="85.50" min="1" step="0.5"
+                  class="w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip Percentage Pills -->
+          <div>
+            <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2.5" data-i18n="tip_percentage">Tip Percentage</label>
+            <div class="grid grid-cols-5 gap-1.5 sm:gap-2" id="tipPresets">
+              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="10">10%</button>
+              <button type="button" class="tip-btn active px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 transition text-center" data-tip="15">15%</button>
+              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="18">18%</button>
+              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="20">20%</button>
+              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="25">25%</button>
+            </div>
+            <div class="flex justify-between items-center mt-3">
+              <span class="text-xs text-slate-400">Or custom tip:</span>
+              <div class="relative rounded-xl shadow-sm">
+                <input type="number" id="customTip" value="15" min="0" max="100" step="1"
+                  class="w-20 pl-2 pr-6 py-1 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none">
+                <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 text-xs font-bold">%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Number of People -->
+          <div>
+            <div class="flex justify-between items-center mb-2.5">
+              <label for="peopleCount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="tip_split_between">Split Between</label>
+              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                <input type="number" id="peopleCount" value="3" min="1" max="100" step="1"
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <span class="text-slate-500 font-normal" data-i18n="people">people</span>
+              </div>
+            </div>
+            <input type="range" id="peopleSlider" min="1" max="20" step="1" value="3" class="w-full">
+          </div>
+
+          <!-- Human-Centric Feature: Round Up Per Person Toggle -->
+          <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div>
+              <label for="roundUpToggle" class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 cursor-pointer block" data-i18n="round_up_tip">Round up each person to whole dollar</label>
+              <span class="text-[11px] text-slate-400">Avoids awkward cent splits on Venmo / CashApp (e.g., $32.78 → $33.00)</span>
+            </div>
+            <input type="checkbox" id="roundUpToggle" class="w-5 h-5 rounded-lg text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 dark:bg-slate-800 cursor-pointer">
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+          <span>💡 Standard dining tip in the US is 15%–20%.</span>
+          <button id="resetBtn" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline" data-i18n="reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results Card -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="tip_each_pays">Each Person Pays</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+
+          <div class="text-4xl sm:text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight" id="eachPersonPay">$32.78</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Split evenly among <span id="summaryPeople" class="font-bold text-slate-900 dark:text-white">3</span> people</p>
+
+          <!-- Bonus Server Tip Indicator if Rounded -->
+          <div id="bonusTipContainer" class="hidden mt-3 p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800/40 text-xs flex justify-between items-center">
+            <span class="text-cyan-700 dark:text-cyan-300 font-semibold">Bonus cents to server:</span>
+            <span class="font-black text-cyan-700 dark:text-cyan-300" id="bonusTipAmount">+$0.67</span>
+          </div>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="tip_original_check">Original Food & Drinks Bill</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="summaryBill">$85.50</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400"><span data-i18n="tip_total_tip">Total Tip</span> (<span id="summaryTipRate">15</span>%)</span>
+              <span class="font-bold text-cyan-600 dark:text-cyan-400" id="summaryTipAmount">$12.83</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600 dark:text-slate-400" data-i18n="tip_per_person">Tip Per Person</span>
+              <span class="font-bold text-slate-900 dark:text-white" id="summaryTipPerPerson">$4.28</span>
+            </div>
+            <div class="flex justify-between items-center pt-2.5 border-t border-slate-100 dark:border-slate-800">
+              <span class="font-bold text-slate-900 dark:text-white" data-i18n="tip_total_with_tip">Total Bill with Tip</span>
+              <span class="font-black text-slate-900 dark:text-white text-base" id="summaryTotalBill">$98.33</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Venmo / Share Text Box -->
+        <div class="premium-card rounded-3xl p-5">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ready to Message Group</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-mono bg-slate-50 dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700" id="sharePreview">
+            Hey everyone! Total was $98.33 with tip. It splits to $32.78 each for 3 people.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User-Friendly Explanation Section -->
+    <article class="mt-10 premium-card rounded-3xl p-6 sm:p-10 space-y-8">
+      <div>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">How Does Tip & Bill Splitting Work?</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Splitting a restaurant check when eating out with friends, family, or colleagues can quickly become awkward. Here is the clean math used to divide the bill fairly:
+        </p>
+      </div>
+
+      <!-- 3-Step Visual Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">1</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Calculate Tip Amount</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Multiply the food bill by the chosen percentage (e.g., $100 bill × 18% = $18 tip).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">2</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Add to Total Check</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Add food check + tip together to arrive at the total restaurant payment ($100 + $18 = $118).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="w-7 h-7 rounded-lg bg-emerald-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center font-black text-xs mb-3">3</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Divide by People</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Divide total by the group count so everyone chips in an exact fair share ($118 ÷ 4 = $29.50 each).</p>
+        </div>
+      </div>
+
+      <!-- Quick Tipping Etiquette Guide -->
+      <div class="border-t border-slate-100 dark:border-slate-800 pt-6">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">Standard Dining Tipping Etiquette</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <span class="font-bold block text-slate-900 dark:text-white mb-1">15% - Standard Service</span>
+            <p class="text-slate-500 dark:text-slate-400">Good for casual dining, cafe meals, lunches, and average table service.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <span class="font-bold block text-slate-900 dark:text-white mb-1">18% - 20% - Great Service</span>
+            <p class="text-slate-500 dark:text-slate-400">The modern expectation for full-service sit-down restaurants, dinner dates, and group dining.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <span class="font-bold block text-slate-900 dark:text-white mb-1">20%+ - Exceptional</span>
+            <p class="text-slate-500 dark:text-slate-400">For outstanding hospitality, large group orders, and holiday dining.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All calculations are for educational purposes.
+  </footer>
+
+  <script>
+    const billAmountInput = document.getElementById('billAmount');
+    const customTipInput = document.getElementById('customTip');
+    const tipBtns = document.querySelectorAll('.tip-btn');
+    const peopleCountInput = document.getElementById('peopleCount');
+    const peopleSlider = document.getElementById('peopleSlider');
+    const roundUpToggle = document.getElementById('roundUpToggle');
+    const resetBtn = document.getElementById('resetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const eachPersonPayEl = document.getElementById('eachPersonPay');
+    const summaryPeopleEl = document.getElementById('summaryPeople');
+    const summaryBillEl = document.getElementById('summaryBill');
+    const summaryTipRateEl = document.getElementById('summaryTipRate');
+    const summaryTipAmountEl = document.getElementById('summaryTipAmount');
+    const summaryTipPerPersonEl = document.getElementById('summaryTipPerPerson');
+    const summaryTotalBillEl = document.getElementById('summaryTotalBill');
+    const bonusTipContainer = document.getElementById('bonusTipContainer');
+    const bonusTipAmountEl = document.getElementById('bonusTipAmount');
+    const sharePreviewEl = document.getElementById('sharePreview');
+
+    let currentTipPercent = 15;
+
+    function calculateTip() {
+      const bill = Math.max(0, parseFloat(billAmountInput.value) || 0);
+      const tipPct = Math.max(0, parseFloat(customTipInput.value) || 0);
+      const people = Math.max(1, parseInt(peopleCountInput.value) || 1);
+      const shouldRoundUp = roundUpToggle.checked;
+
+      summaryPeopleEl.textContent = people;
+      summaryTipRateEl.textContent = tipPct;
+
+      const rawTip = bill * (tipPct / 100);
+      const rawTotalBill = bill + rawTip;
+      const rawPerPerson = rawTotalBill / people;
+
+      let finalPerPerson = rawPerPerson;
+      let finalTotal = rawTotalBill;
+      let finalTip = rawTip;
+
+      if (shouldRoundUp) {
+        finalPerPerson = Math.ceil(rawPerPerson);
+        finalTotal = finalPerPerson * people;
+        finalTip = finalTotal - bill;
+
+        const bonus = finalTotal - rawTotalBill;
+        if (bonus > 0) {
+          bonusTipContainer.classList.remove('hidden');
+          bonusTipAmountEl.textContent = '+' + CalcCurrency.format(bonus);
+        } else {
+          bonusTipContainer.classList.add('hidden');
+        }
+      } else {
+        bonusTipContainer.classList.add('hidden');
+      }
+
+      const tipPerPerson = finalTip / people;
+
+      eachPersonPayEl.textContent = CalcCurrency.format(finalPerPerson);
+      summaryBillEl.textContent = CalcCurrency.format(bill);
+      summaryTipAmountEl.textContent = CalcCurrency.format(finalTip);
+      summaryTipPerPersonEl.textContent = CalcCurrency.format(tipPerPerson);
+      summaryTotalBillEl.textContent = CalcCurrency.format(finalTotal);
+
+      sharePreviewEl.textContent = `Hey everyone! Total check is ${CalcCurrency.format(finalTotal)} (including ${tipPct}% tip). Split between ${people} people = ${CalcCurrency.format(finalPerPerson)} each!`;
+    }
+
+    tipBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tipBtns.forEach(b => {
+          b.classList.remove('active', 'bg-slate-900', 'text-white', 'dark:bg-emerald-500', 'dark:text-slate-950');
+          b.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+        });
+        btn.classList.add('active', 'bg-slate-900', 'text-white', 'dark:bg-emerald-500', 'dark:text-slate-950');
+        btn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+
+        currentTipPercent = parseFloat(btn.getAttribute('data-tip'));
+        customTipInput.value = currentTipPercent;
+        calculateTip();
+      });
+    });
+
+    customTipInput.addEventListener('input', () => {
+      tipBtns.forEach(b => b.classList.remove('active', 'bg-slate-900', 'text-white', 'dark:bg-emerald-500', 'dark:text-slate-950'));
+      calculateTip();
+    });
+
+    billAmountInput.addEventListener('input', calculateTip);
+    peopleCountInput.addEventListener('input', () => { peopleSlider.value = peopleCountInput.value; calculateTip(); });
+    peopleSlider.addEventListener('input', () => { peopleCountInput.value = peopleSlider.value; calculateTip(); });
+    roundUpToggle.addEventListener('change', calculateTip);
+
+    resetBtn.addEventListener('click', () => {
+      billAmountInput.value = '85.50';
+      customTipInput.value = '15';
+      peopleCountInput.value = '3';
+      peopleSlider.value = '3';
+      roundUpToggle.checked = false;
+      document.querySelector('.tip-btn[data-tip="15"]').click();
+      calculateTip();
+    });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(sharePreviewEl.textContent).then(() => {
+        window.showToast('Dinner bill split copied for WhatsApp / Venmo!');
+      });
+    });
+
+    window.addEventListener('currencyChanged', calculateTip);
+    calculateTip();
+  </script>
+</body>
+</html>

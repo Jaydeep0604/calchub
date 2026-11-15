@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calorie Deficit & TDEE Calculator - Weight Loss, Maintenance & Muscle Gain</title>
+  <meta name="description" content="Calculate your daily maintenance calories (TDEE), basal metabolic rate (BMR), and exact calorie deficit for healthy fat loss or lean bulk. Metric & Imperial units.">
+  <meta name="keywords" content="calorie deficit calculator, tdee calculator, bmr calculator, daily calorie needs, weight loss calorie calculator, fitness calculator, imperial tdee">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#080c14', 800: '#0f172a', 700: '#1e293b', 600: '#334155' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white pb-16 sm:pb-0">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="sleep-cycle-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Sleep Cycles</a>
+        <a href="recipe-scaler-calculator.html" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Recipe Scaler</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Breadcrumb & Title -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="calorie_title">Calorie Deficit & TDEE</span>
+    </nav>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="calorie_title">Calorie Deficit & TDEE Calculator</h1>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+            🏃 Health & Fitness
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="calorie_sub">Determine your daily maintenance calories and personalized deficit targets for sustainable fat loss.</p>
+      </div>
+
+      <!-- Unit Switcher: Metric vs Imperial -->
+      <div class="unit-toggle w-full sm:w-auto" id="unitToggle">
+        <button type="button" class="unit-toggle-btn active" id="btnMetric" data-unit="metric" data-i18n="unit_metric">Metric (cm, kg)</button>
+        <button type="button" class="unit-toggle-btn" id="btnImperial" data-unit="imperial" data-i18n="unit_imperial">Imperial (ft/in, lbs)</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      
+      <!-- Left Column: Inputs -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <span>⚖️</span> Body & Activity Stats
+        </h2>
+
+        <div class="space-y-6">
+          <!-- Gender & Age -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2" data-i18n="calorie_gender">Biological Sex</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" id="btnMale" class="gender-btn py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 bg-slate-900 text-white dark:bg-cyan-500 dark:text-slate-950 transition">Male</button>
+                <button type="button" id="btnFemale" class="gender-btn py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition">Female</button>
+              </div>
+            </div>
+            <div>
+              <label for="ageInput" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2" data-i18n="calorie_age">Age</label>
+              <input type="number" id="ageInput" value="28" min="15" max="99" class="w-full px-3 py-2 text-sm font-black border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+            </div>
+          </div>
+
+          <!-- Height & Weight (Dynamic Metric / Imperial) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Height Container -->
+            <div>
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2" id="heightLabel" data-i18n="calorie_height">Height</label>
+              
+              <!-- Metric Height -->
+              <div id="metricHeightBox" class="flex items-center gap-2">
+                <input type="number" id="heightCm" value="175" min="100" max="240" class="w-full px-3 py-2 text-sm font-black border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <span class="text-xs font-bold text-slate-400">cm</span>
+              </div>
+
+              <!-- Imperial Height (Feet + Inches) -->
+              <div id="imperialHeightBox" class="hidden grid-cols-2 gap-2">
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="heightFt" value="5" min="3" max="8" class="w-full px-2.5 py-2 text-sm font-black border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                  <span class="text-xs font-bold text-slate-400">ft</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <input type="number" id="heightIn" value="9" min="0" max="11" class="w-full px-2.5 py-2 text-sm font-black border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                  <span class="text-xs font-bold text-slate-400">in</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weight Container -->
+            <div>
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2" id="weightLabel" data-i18n="calorie_weight">Weight</label>
+              <div class="flex items-center gap-2">
+                <input type="number" id="weightInput" value="78" min="30" max="350" step="0.5" class="w-full px-3 py-2 text-sm font-black border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <span class="text-xs font-bold text-slate-400" id="weightUnitText">kg</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Level -->
+          <div>
+            <label for="activityLevel" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2" data-i18n="calorie_activity">Daily Activity Level</label>
+            <select id="activityLevel" class="w-full py-2.5 px-3 text-xs sm:text-sm font-semibold border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+              <option value="1.2">Sedentary (Desk job, little to no exercise)</option>
+              <option value="1.375" selected>Lightly Active (Exercise 1–3 days/week)</option>
+              <option value="1.55">Moderately Active (Exercise 3–5 days/week)</option>
+              <option value="1.725">Very Active (Hard training 6–7 days/week)</option>
+              <option value="1.9">Extremely Active (Athletic training / physical labor)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+          <span>💡 Uses the gold-standard Mifflin-St Jeor equation.</span>
+          <button id="resetBtn" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline" data-i18n="reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="calorie_tdee">Maintenance Calories (TDEE)</h2>
+            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+              <span>📋</span> <span data-i18n="copy">Copy</span>
+            </button>
+          </div>
+
+          <div class="flex items-baseline gap-2">
+            <div class="text-4xl sm:text-5xl font-black text-cyan-600 dark:text-cyan-400 tracking-tight" id="tdeeCalories">2,410</div>
+            <span class="text-sm font-bold text-slate-500">kcal/day</span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Daily calorie burn to maintain your current weight</p>
+
+          <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3 text-sm">
+            <!-- BMR -->
+            <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+              <span class="text-xs font-bold text-slate-600 dark:text-slate-400" data-i18n="calorie_bmr">Basal Metabolic Rate (BMR)</span>
+              <span class="font-extrabold text-slate-900 dark:text-white" id="bmrCalories">1,753 kcal</span>
+            </div>
+
+            <!-- Sustainable Fat Loss Target (-500 kcal) -->
+            <div class="p-3.5 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/60 dark:border-emerald-800/40 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white text-xs block" data-i18n="calorie_loss_target">Weight Loss Deficit Target</span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400">Lose ~1 lb (0.5 kg) per week (-500 kcal)</span>
+              </div>
+              <span class="font-black text-emerald-600 dark:text-emerald-400 text-xl" id="lossCalories">1,910</span>
+            </div>
+
+            <!-- Mild Fat Loss Target (-250 kcal) -->
+            <div class="p-3.5 rounded-2xl bg-cyan-50/50 dark:bg-cyan-950/30 border border-cyan-200/50 dark:border-cyan-800/40 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white text-xs block" data-i18n="calorie_mild_loss">Mild Fat Loss (-250 kcal)</span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400">Slow, easy, sustainable cut</span>
+              </div>
+              <span class="font-black text-cyan-600 dark:text-cyan-400 text-lg" id="mildLossCalories">2,160</span>
+            </div>
+
+            <!-- Lean Muscle Surplus (+300 kcal) -->
+            <div class="p-3.5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200/50 dark:border-indigo-800/40 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white text-xs block" data-i18n="calorie_gain_target">Lean Muscle Surplus (+300 kcal)</span>
+                <span class="text-[10px] text-slate-500 dark:text-slate-400">Clean bulking with minimal fat gain</span>
+              </div>
+              <span class="font-black text-indigo-600 dark:text-indigo-400 text-lg" id="gainCalories">2,710</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Macro Breakdown Card -->
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Daily Macronutrient Targets (Fat Loss)</h3>
+          <div class="grid grid-cols-3 gap-2.5 text-center">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+              <span class="text-[10px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider block" data-i18n="protein">Protein</span>
+              <span class="text-base font-black text-slate-900 dark:text-white" id="macroProtein">156g</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">30%</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+              <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block" data-i18n="carbs">Carbs</span>
+              <span class="text-base font-black text-slate-900 dark:text-white" id="macroCarbs">191g</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">40%</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60">
+              <span class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block" data-i18n="fats">Fats</span>
+              <span class="text-base font-black text-slate-900 dark:text-white" id="macroFats">64g</span>
+              <span class="text-[10px] text-slate-400 block mt-0.5">30%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User-Friendly Friendly Explanation Section -->
+    <article class="mt-10 premium-card rounded-3xl p-6 sm:p-10 space-y-8">
+      <div>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Understanding BMR, TDEE, & Calorie Deficits</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Weight management comes down to energy balance. You do not need confusing fads: your body obeys the laws of thermodynamics. Here is how your daily numbers work:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">🫀 BMR (Basal Metabolic Rate)</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            The minimum baseline calories burned keeping your heart pumping, lungs breathing, cells repairing, and organs alive in bed all day. Never eat below your BMR without clinical supervision.
+          </p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">⚡ TDEE (Total Daily Energy Expenditure)</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Your BMR plus calories burned walking, fidgeting (NEAT), exercising, and digesting meals (TEF). Eating 500 calories below TDEE burns ~3,500 kcal per week, equaling 1 pound of pure body fat loss.
+          </p>
+        </div>
+      </div>
+
+      <!-- Formula Breakdown -->
+      <div class="border-t border-slate-100 dark:border-slate-800 pt-6">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">The Scientific Formula (Mifflin-St Jeor)</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
+          Adopted by the American Dietetic Association as the most accurate non-clinical formula:
+        </p>
+        <div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 font-mono text-xs text-slate-800 dark:text-slate-200 overflow-x-auto space-y-1">
+          <div><strong>Men:</strong> BMR = (10 × weight in kg) + (6.25 × height in cm) - (5 × age) + 5</div>
+          <div><strong>Women:</strong> BMR = (10 × weight in kg) + (6.25 × height in cm) - (5 × age) - 161</div>
+          <div class="text-cyan-600 dark:text-cyan-400"><strong>TDEE:</strong> BMR × Activity Multiplier (1.2 to 1.9)</div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All calculations are for educational purposes.
+  </footer>
+
+  <script>
+    let currentUnit = 'metric';
+    let gender = 'male';
+
+    const btnMetric = document.getElementById('btnMetric');
+    const btnImperial = document.getElementById('btnImperial');
+    const metricHeightBox = document.getElementById('metricHeightBox');
+    const imperialHeightBox = document.getElementById('imperialHeightBox');
+    const heightCm = document.getElementById('heightCm');
+    const heightFt = document.getElementById('heightFt');
+    const heightIn = document.getElementById('heightIn');
+    const weightInput = document.getElementById('weightInput');
+    const weightUnitText = document.getElementById('weightUnitText');
+
+    const btnMale = document.getElementById('btnMale');
+    const btnFemale = document.getElementById('btnFemale');
+    const ageInput = document.getElementById('ageInput');
+    const activityLevel = document.getElementById('activityLevel');
+    const resetBtn = document.getElementById('resetBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const tdeeCaloriesEl = document.getElementById('tdeeCalories');
+    const bmrCaloriesEl = document.getElementById('bmrCalories');
+    const lossCaloriesEl = document.getElementById('lossCalories');
+    const mildLossCaloriesEl = document.getElementById('mildLossCalories');
+    const gainCaloriesEl = document.getElementById('gainCalories');
+    const macroProteinEl = document.getElementById('macroProtein');
+    const macroCarbsEl = document.getElementById('macroCarbs');
+    const macroFatsEl = document.getElementById('macroFats');
+
+    function getWeightInKg() {
+      const val = parseFloat(weightInput.value) || 70;
+      return currentUnit === 'metric' ? val : val * 0.453592;
+    }
+
+    function getHeightInCm() {
+      if (currentUnit === 'metric') {
+        return parseFloat(heightCm.value) || 170;
+      } else {
+        const ft = parseFloat(heightFt.value) || 5;
+        const inch = parseFloat(heightIn.value) || 9;
+        return (ft * 30.48) + (inch * 2.54);
+      }
+    }
+
+    function calculateTDEE() {
+      const age = parseInt(ageInput.value) || 25;
+      const height = getHeightInCm();
+      const weight = getWeightInKg();
+      const multiplier = parseFloat(activityLevel.value) || 1.2;
+
+      // Mifflin-St Jeor
+      let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+      if (gender === 'male') {
+        bmr += 5;
+      } else {
+        bmr -= 161;
+      }
+
+      const tdee = bmr * multiplier;
+      const weightLoss = Math.max(1200, tdee - 500);
+      const mildLoss = Math.max(1200, tdee - 250);
+      const muscleGain = tdee + 300;
+
+      bmrCaloriesEl.textContent = Math.round(bmr).toLocaleString() + ' kcal';
+      tdeeCaloriesEl.textContent = Math.round(tdee).toLocaleString();
+      lossCaloriesEl.textContent = Math.round(weightLoss).toLocaleString() + ' kcal';
+      mildLossCaloriesEl.textContent = Math.round(mildLoss).toLocaleString() + ' kcal';
+      gainCaloriesEl.textContent = Math.round(muscleGain).toLocaleString() + ' kcal';
+
+      // Macros for fat loss (30% protein, 40% carbs, 30% fats)
+      const proteinCals = weightLoss * 0.30;
+      const carbCals = weightLoss * 0.40;
+      const fatCals = weightLoss * 0.30;
+
+      macroProteinEl.textContent = Math.round(proteinCals / 4) + 'g';
+      macroCarbsEl.textContent = Math.round(carbCals / 4) + 'g';
+      macroFatsEl.textContent = Math.round(fatCals / 9) + 'g';
+    }
+
+    // Unit toggle logic
+    function setUnit(unit) {
+      if (unit === currentUnit) return;
+      currentUnit = unit;
+
+      if (unit === 'metric') {
+        btnMetric.classList.add('active');
+        btnImperial.classList.remove('active');
+        metricHeightBox.classList.remove('hidden');
+        imperialHeightBox.classList.add('hidden');
+        imperialHeightBox.classList.remove('grid');
+
+        // Convert current lbs to kg
+        const lbs = parseFloat(weightInput.value) || 172;
+        weightInput.value = Math.round(lbs * 0.453592);
+        weightUnitText.textContent = 'kg';
+
+        // Convert current ft/in to cm
+        const ft = parseFloat(heightFt.value) || 5;
+        const inch = parseFloat(heightIn.value) || 9;
+        heightCm.value = Math.round((ft * 30.48) + (inch * 2.54));
+      } else {
+        btnImperial.classList.add('active');
+        btnMetric.classList.remove('active');
+        metricHeightBox.classList.add('hidden');
+        imperialHeightBox.classList.remove('hidden');
+        imperialHeightBox.classList.add('grid');
+
+        // Convert current kg to lbs
+        const kg = parseFloat(weightInput.value) || 78;
+        weightInput.value = Math.round(kg * 2.20462);
+        weightUnitText.textContent = 'lbs';
+
+        // Convert current cm to ft/in
+        const cm = parseFloat(heightCm.value) || 175;
+        const totalInches = cm / 2.54;
+        heightFt.value = Math.floor(totalInches / 12);
+        heightIn.value = Math.round(totalInches % 12);
+      }
+
+      calculateTDEE();
+    }
+
+    btnMetric.addEventListener('click', () => setUnit('metric'));
+    btnImperial.addEventListener('click', () => setUnit('imperial'));
+
+    btnMale.addEventListener('click', () => {
+      gender = 'male';
+      btnMale.classList.add('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnMale.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      btnFemale.classList.remove('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnFemale.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      calculateTDEE();
+    });
+
+    btnFemale.addEventListener('click', () => {
+      gender = 'female';
+      btnFemale.classList.add('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnFemale.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      btnMale.classList.remove('bg-slate-900', 'text-white', 'dark:bg-cyan-500', 'dark:text-slate-950');
+      btnMale.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+      calculateTDEE();
+    });
+
+    [ageInput, heightCm, heightFt, heightIn, weightInput, activityLevel].forEach(el => {
+      el.addEventListener('input', calculateTDEE);
+      el.addEventListener('change', calculateTDEE);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      ageInput.value = 28;
+      if (currentUnit === 'metric') {
+        heightCm.value = 175;
+        weightInput.value = 78;
+      } else {
+        heightFt.value = 5;
+        heightIn.value = 9;
+        weightInput.value = 172;
+      }
+      activityLevel.value = '1.375';
+      calculateTDEE();
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const text = `🥗 Calorie & TDEE Targets:\n` +
+        `• BMR: ${bmrCaloriesEl.textContent}\n` +
+        `• Maintenance (TDEE): ${tdeeCaloriesEl.textContent} kcal/day\n` +
+        `• Fat Loss Target (-500 kcal): ${lossCaloriesEl.textContent}\n` +
+        `• Lean Muscle Gain (+300 kcal): ${gainCaloriesEl.textContent}\n` +
+        `• Fat Loss Macros: ${macroProteinEl.textContent} Protein, ${macroCarbsEl.textContent} Carbs, ${macroFatsEl.textContent} Fats\n` +
+        `Calculated via CalcHub TDEE Tool.`;
+      navigator.clipboard.writeText(text).then(() => {
+        window.showToast('Calorie targets copied to clipboard!');
+      });
+    });
+
+    calculateTDEE();
+  </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - CalcHub Financial & Daily Utility Suite</title>
+  <meta name="description" content="Learn about CalcHub's mission to make accurate, private, and free financial calculations accessible to everyone.">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+        <a href="index.html" class="hidden sm:inline-flex text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-obsidian-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+          ← Calculators
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 flex-grow">
+    <div class="premium-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-12 space-y-5 sm:space-y-6 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-3">About CalcHub</h1>
+      
+      <p>
+        Welcome to <strong>CalcHub</strong>, an open, free, and privacy-first digital utility suite dedicated to helping individuals, professionals, and small business owners make informed financial and commercial decisions with zero friction.
+      </p>
+
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white pt-2">Our Mission</h2>
+      <p>
+        Too many online calculators are cluttered with intrusive popups, slow load times, or demand that you register with personal contact information just to see a loan amortization schedule. We believe that math and financial projections should be accessible, instantaneous, transparent, and private.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <h3 class="font-bold text-slate-900 dark:text-white mb-1">🔐 Privacy by Default</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Every calculation runs locally inside your browser via client-side JavaScript. Your income, debt, and savings data is never sent to our servers.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <h3 class="font-bold text-slate-900 dark:text-white mb-1">📐 Verified Mathematics</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Our algorithms follow standard banking, lending, and corporate financial accounting formulas with transparent step-by-step explanations.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All rights reserved.
+  </footer>
+</body>
+</html>

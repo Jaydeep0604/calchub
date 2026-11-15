@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CalcHub - Free Finance, Corporate, Food & Daily Utility Calculators</title>
+  <meta name="description" content="Accurate, free online calculators for personal finance, corporate meetings, dining bill split, recipe scaling, fuel costs, calorie deficits, and sleep cycles. Fast, private, and 100% free.">
+  <meta name="keywords" content="financial calculators, meeting cost calculator, tip calculator, sleep cycle calculator, recipe scaler, calorie deficit, fuel cost calculator">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a'
+            },
+            obsidian: {
+              900: '#080c14', 800: '#0f172a', 700: '#1e293b', 600: '#334155'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+  
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-500 dark:from-cyan-500 dark:to-emerald-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">
+          %
+        </div>
+        <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">
+          Calc<span class="text-cyan-600 dark:text-cyan-400">Hub</span>
+        </span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="#calculators" data-i18n="nav_all" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">All Calculators</a>
+        <a href="meeting-cost-calculator.html" data-i18n="nav_meeting" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Meeting Cost</a>
+        <a href="tip-bill-split-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Bill Split</a>
+        <a href="loan-calculator.html" data-i18n="nav_loan" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Loans</a>
+        <a href="sleep-cycle-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Sleep Cycles</a>
+      </nav>
+
+      <!-- Global Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+
+        <button id="mobileMenuBtn" aria-label="Toggle Menu" class="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobileMenu" class="hidden lg:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-obsidian-900 px-4 pt-2 pb-4 space-y-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+      <a href="#calculators" data-i18n="nav_all" class="block py-2 hover:text-cyan-600 dark:hover:text-cyan-400">All Calculators</a>
+      <a href="meeting-cost-calculator.html" data-i18n="nav_meeting" class="block py-2 hover:text-cyan-600 dark:hover:text-cyan-400">Corporate Meeting Cost</a>
+      <a href="tip-bill-split-calculator.html" class="block py-2 hover:text-cyan-600 dark:hover:text-cyan-400">Dining Tip & Bill Split</a>
+      <a href="loan-calculator.html" data-i18n="nav_loan" class="block py-2 hover:text-cyan-600 dark:hover:text-cyan-400">Loan & EMI</a>
+      <a href="sleep-cycle-calculator.html" class="block py-2 hover:text-cyan-600 dark:hover:text-cyan-400">Sleep Cycle Calculator</a>
+      <a href="privacy-policy.html" data-i18n="nav_privacy" class="block py-2 hover:text-cyan-600 dark:hover:text-cyan-400">Privacy Policy</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-12 pb-8 sm:pt-16 sm:pb-12 text-center">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 dark:bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+      <span data-i18n="hero_badge" class="inline-flex items-center gap-1.5 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 rounded-full mb-5 border border-cyan-200/80 dark:border-cyan-800/60 shadow-sm">
+        ✨ Corporate, Food, Health & Financial Tools
+      </span>
+      
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.15] mb-5">
+        <span data-i18n="hero_title_1">Calculators for</span> <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-cyan-400 dark:via-sky-400 dark:to-indigo-300" data-i18n="hero_title_2">Everyday Real Life</span>
+      </h1>
+      
+      <p data-i18n="hero_desc" class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
+        From corporate meeting costs and dinner bill splits to home loans, sleep cycles, and calorie targets. 100% private, instant, and free.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="max-w-xl mx-auto relative mb-6">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Search (e.g. meeting, bill split, sleep, loan, fuel, calorie)..." 
+          class="w-full pl-11 pr-14 py-3.5 bg-white dark:bg-obsidian-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 transition text-sm sm:text-base">
+        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+          <kbd class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-md border border-slate-200 dark:border-slate-600">/</kbd>
+        </div>
+      </div>
+
+      <!-- Cool Category Filter Pills (Zero warm colors) -->
+      <div class="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8 sm:mb-10 px-1" id="filterContainer">
+        <button class="filter-btn active px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 dark:bg-cyan-500 text-white dark:text-slate-950 shadow-sm transition" data-category="all" data-i18n="all_tools_count">All 12 Tools</button>
+        <button class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white dark:bg-obsidian-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition" data-category="corporate" data-i18n="cat_corporate">🏢 Corporate & Work</button>
+        <button class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white dark:bg-obsidian-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition" data-category="food" data-i18n="cat_food">🍲 Food & Dining</button>
+        <button class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white dark:bg-obsidian-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition" data-category="finance" data-i18n="cat_finance">💰 Money & Loans</button>
+        <button class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white dark:bg-obsidian-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition" data-category="health" data-i18n="cat_health">🧘 Self & Health</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculators Grid Section (12 Tools) -->
+  <main id="calculators" class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-16 w-full flex-grow">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="calcGrid">
+      
+      <!-- Card 1: Meeting Cost (Corporate) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="corporate" data-keywords="meeting cost corporate employee salary time zoom standup work office productivity">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            👥
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950 px-2 py-0.5 rounded-md">Corporate</span>
+            <span class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">Trending</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="meeting_title">Meeting Cost Calculator</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="meeting_sub">
+            Calculate the true financial salary cost of office meetings, Zoom calls, and standups. Perfect for team leaders.
+          </p>
+        </div>
+        <a href="meeting-cost-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 2: Tip & Bill Split (Food) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="food" data-keywords="tip bill split restaurant dining food dinner lunch group check portion">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🧾
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">Food & Dining</span>
+            <span class="text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950 px-2 py-0.5 rounded-md">Daily Essential</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="tip_title">Tip & Bill Split Calculator</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="tip_sub">
+            Split restaurant checks evenly with custom tip percentages and fair per-person shares. Mobile-friendly.
+          </p>
+        </div>
+        <a href="tip-bill-split-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 3: Sleep Cycle (Health / Self) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="health" data-keywords="sleep cycle rem bedtime wake up wake time nap rest health morning fatigue">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🌙
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950 px-2 py-0.5 rounded-md">Self & Health</span>
+            <span class="text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950 px-2 py-0.5 rounded-md">90-min REM</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="sleep_title">Sleep Cycle & Wake Calculator</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="sleep_sub">
+            Wake up energized by timing your alarms to complete 90-minute REM cycles instead of groggy in deep sleep.
+          </p>
+        </div>
+        <a href="sleep-cycle-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 4: Fuel Cost & Commute (Travel) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="corporate" data-keywords="fuel cost gas trip commute car mpg carpool road travel driving">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-sky-100 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🚗
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950 px-2 py-0.5 rounded-md">Commute & Travel</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="fuel_title">Fuel Cost & Commute Tool</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="fuel_sub">
+            Calculate exact gas costs for daily office commutes or road trips. Split fuel easily with carpool passengers.
+          </p>
+        </div>
+        <a href="fuel-cost-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 5: Recipe Portion Scaler (Food) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="food" data-keywords="recipe scaler portion ingredients cook baking meal prep serving kitchen food">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-600 dark:text-teal-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🥣
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950 px-2 py-0.5 rounded-md">Food & Kitchen</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="recipe_title">Recipe Serving Scaler</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="recipe_sub">
+            Scale ingredient quantities automatically when cooking for a crowd or meal-prepping for one.
+          </p>
+        </div>
+        <a href="recipe-scaler-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 6: Calorie & TDEE (Health / Self) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="health" data-keywords="calorie deficit tdee bmr weight loss fat loss nutrition diet fitness healthy">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🥗
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">Health & Fitness</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="calorie_title">Calorie Deficit & TDEE</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="calorie_sub">
+            Calculate your maintenance calories (TDEE) and exact daily calorie deficit target for healthy fat loss.
+          </p>
+        </div>
+        <a href="calorie-tdee-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 7: Loan & EMI (Finance) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="finance" data-keywords="loan emi mortgage car auto interest payment bank debt">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            💳
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950 px-2 py-0.5 rounded-md">Finance</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="loan_title">Loan & EMI Calculator</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="loan_sub">
+            Calculate your monthly payment (EMI), total interest payable, and see a full amortization breakdown.
+          </p>
+        </div>
+        <a href="loan-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 8: Compound Interest (Finance) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="finance" data-keywords="compound interest investment savings wealth fire stock index returns future value">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            📈
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded-md">Investing</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="compound_title">Compound Interest</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="compound_sub">
+            Project your wealth growth over time with monthly deposits, annual returns, and dynamic growth charts.
+          </p>
+        </div>
+        <a href="compound-interest-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 9: Hourly to Salary (Corporate / Work) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="corporate" data-keywords="salary hourly wage freelance contractor rate billable work hours pay career">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            💼
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950 px-2 py-0.5 rounded-md">Corporate & Pay</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="salary_title">Hourly to Salary Converter</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="salary_sub">
+            Convert annual salary to hourly, weekly, bi-weekly, and monthly rates with customizable hours.
+          </p>
+        </div>
+        <a href="salary-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 10: Profit Margin (Business) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="corporate" data-keywords="profit margin markup e-commerce shopify sales revenue cost cogs retail business">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🏷️
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950 px-2 py-0.5 rounded-md">Business & Margin</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="margin_title">Profit Margin & Markup</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="margin_sub">
+            Calculate gross profit, net margin, and required markup percentages to price goods for maximum profit.
+          </p>
+        </div>
+        <a href="profit-margin-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 11: Mortgage Early Payoff (Finance) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="finance" data-keywords="mortgage extra payment early payoff principal amortization home loan savings">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-sky-100 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🏠
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-950 px-2 py-0.5 rounded-md">Real Estate</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="mortgage_title">Mortgage Early Payoff</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="mortgage_sub">
+            See how adding an extra monthly payment cuts years off your mortgage term and saves tens of thousands in interest.
+          </p>
+        </div>
+        <a href="mortgage-payoff-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+      <!-- Card 12: Percentage & Discount (Daily) -->
+      <div class="calc-card premium-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between" data-category="food" data-keywords="percentage discount sales tax tip coupon sale fraction math daily shopping">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center text-2xl font-bold mb-4 shadow-sm">
+            🛍️
+          </div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">Daily Math</span>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-2" data-i18n="pct_title">Percentage & Discount</h2>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed" data-i18n="pct_sub">
+            Quickly calculate sale price after coupon discounts, sales tax, percentage difference, and retail savings.
+          </p>
+        </div>
+        <a href="percentage-calculator.html" class="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 text-white dark:text-slate-950 transition shadow-sm" data-i18n="open_calc">
+          Open Calculator →
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Empty Search State -->
+    <div id="noResults" class="hidden text-center py-16">
+      <div class="text-4xl mb-3">🔍</div>
+      <p class="text-slate-500 dark:text-slate-400 text-base font-medium">No calculators found matching your search.</p>
+    </div>
+  </main>
+
+  <!-- Educational Trust Section -->
+  <section class="border-t border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-obsidian-800/50 py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto space-y-6 text-slate-600 dark:text-slate-400 text-sm leading-relaxed text-center sm:text-left">
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Why Use CalcHub Calculators?</h2>
+        <p>
+          CalcHub brings together essential everyday calculations across work, food, fitness, and money into one unified, private interface. Zero login barriers, no ads cluttering your screen, and no tracking.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-3">
+          <div class="premium-card p-5 rounded-2xl">
+            <div class="text-2xl mb-2">🔒</div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">100% Client-Side Privacy</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Your numbers never leave your device. All calculations are executed directly inside your local browser.</p>
+          </div>
+          <div class="premium-card p-5 rounded-2xl">
+            <div class="text-2xl mb-2">⚡</div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Verified Formulas</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">All tools use standard clinical, banking, and mathematical algorithms with transparent explanations.</p>
+          </div>
+          <div class="premium-card p-5 rounded-2xl">
+            <div class="text-2xl mb-2">📱</div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Fully Responsive</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Flawless on phone, tablet, or desktop with instant responsive updates and interactive copy tools.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-10 border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="space-y-3">
+        <div class="flex items-center gap-2 text-slate-900 dark:text-white font-extrabold text-lg">
+          <span class="w-7 h-7 rounded-lg bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 flex items-center justify-center text-xs font-bold">%</span>
+          CalcHub
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          Free, accurate, and instant tools designed to make calculations simple and private.
+        </p>
+        <p class="text-xs" data-i18n="footer_rights">© 2026 CalcHub. All rights reserved.</p>
+      </div>
+
+      <div>
+        <h4 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-wider mb-3">Corporate & Food</h4>
+        <ul class="space-y-2">
+          <li><a href="meeting-cost-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Meeting Cost Calculator</a></li>
+          <li><a href="tip-bill-split-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Dining Tip & Bill Split</a></li>
+          <li><a href="recipe-scaler-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Recipe Portion Scaler</a></li>
+          <li><a href="salary-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Hourly to Salary Converter</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-wider mb-3">Health & Travel</h4>
+        <ul class="space-y-2">
+          <li><a href="sleep-cycle-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Sleep Cycle & Wake-Up</a></li>
+          <li><a href="calorie-tdee-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Calorie Deficit & TDEE</a></li>
+          <li><a href="fuel-cost-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Fuel Cost & Commute</a></li>
+          <li><a href="loan-calculator.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Loan & EMI Calculator</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-wider mb-3">Legal & Transparency</h4>
+        <ul class="space-y-2">
+          <li><a href="privacy-policy.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Privacy Policy</a></li>
+          <li><a href="terms.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Terms of Service</a></li>
+          <li><a href="about.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">About Us</a></li>
+          <li><a href="contact.html" class="hover:text-cyan-600 dark:hover:text-cyan-400 transition">Contact & Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Search & Filter Script -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.calc-card');
+    const noResults = document.getElementById('noResults');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    let currentCategory = 'all';
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    function filterCards() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const keywords = card.getAttribute('data-keywords').toLowerCase();
+        const title = card.querySelector('h2').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+
+        const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+        const matchesQuery = query === '' || title.includes(query) || desc.includes(query) || keywords.includes(query);
+
+        if (matchesCategory && matchesQuery) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+      }
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('active', 'bg-slate-900', 'dark:bg-cyan-500', 'text-white', 'dark:text-slate-950');
+          b.classList.add('bg-white', 'dark:bg-obsidian-800', 'text-slate-600', 'dark:text-slate-300');
+        });
+        btn.classList.remove('bg-white', 'dark:bg-obsidian-800', 'text-slate-600', 'dark:text-slate-300');
+        btn.classList.add('active', 'bg-slate-900', 'dark:bg-cyan-500', 'text-white', 'dark:text-slate-950');
+
+        currentCategory = btn.getAttribute('data-category');
+        filterCards();
+      });
+    });
+  </script>
+</body>
+</html>

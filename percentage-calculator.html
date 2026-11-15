@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Percentage & Discount Calculator - Free Sales Tax & Math Tool</title>
+  <meta name="description" content="Calculate discounts, sales tax, percentage increase/decrease, and tips quickly with verified math formulas. 100% free.">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/theme.css">
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/currency.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group flex-shrink-0">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 dark:from-emerald-500 dark:to-cyan-500 text-white flex items-center justify-center font-black text-base sm:text-xl shadow-md group-hover:scale-105 transition-transform duration-200">%</div>
+        <span class="font-black text-xl sm:text-2xl tracking-tight text-slate-900 dark:text-white">Calc<span class="text-cyan-600 dark:text-emerald-400">Hub</span></span>
+      </a>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+        <a href="index.html" data-i18n="back_to_calc" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">← Back to Calculators</a>
+        <a href="loan-calculator.html" data-i18n="nav_loan" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Loan / EMI</a>
+        <a href="compound-interest-calculator.html" data-i18n="nav_compound" class="hover:text-cyan-600 dark:hover:text-emerald-400 transition">Compound Interest</a>
+      </nav>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <div class="language-selector-mount"></div>
+        <div class="currency-selector-mount"></div>
+        <div class="theme-toggle-mount"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ad Container (Hidden until approval) -->
+  <div class="ad-slot-container max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 w-full">
+    <div class="border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-2 text-center text-xs text-slate-400 uppercase tracking-widest font-semibold flex items-center justify-center h-20">
+      <span>Advertisement Space (Google AdSense Header)</span>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 flex-grow w-full">
+    <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
+      <a href="index.html" class="hover:underline">Home</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="pct_title">Percentage & Discounts</span>
+    </nav>
+    <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="pct_title">Percentage & Discount Calculator</h1>
+      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+        🔢 Math & Everyday
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+      <!-- Tool 1: Retail Discount -->
+      <div class="premium-card p-4 sm:p-6 lg:p-7 rounded-2xl sm:rounded-3xl space-y-4">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🏷️</span> Discount & Sale Price
+        </h2>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">Original Price (<span class="currency-symbol">$</span>)</label>
+          <input type="number" id="discOriginal" value="80.00" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">Discount (% Off)</label>
+          <input type="number" id="discPercent" value="25" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+          <div>
+            <span class="text-xs text-slate-400 block">Final Sale Price</span>
+            <span class="text-xl sm:text-2xl font-black text-brand-600 dark:text-emerald-400" id="discFinal">$60.00</span>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block">You Save</span>
+            <span class="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400" id="discSavings">$20.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 2: What is X% of Y? -->
+      <div class="premium-card p-4 sm:p-6 lg:p-7 rounded-2xl sm:rounded-3xl space-y-4">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>🔢</span> What is X% of Y?
+        </h2>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">What is (%)</label>
+          <input type="number" id="pctX" value="15" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">Of Number</label>
+          <input type="number" id="pctY" value="200" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+          <span class="text-xs text-slate-400 block">Result</span>
+          <span class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white" id="pctResult">30.00</span>
+        </div>
+      </div>
+
+      <!-- Tool 3: Percentage Increase / Decrease -->
+      <div class="premium-card p-4 sm:p-6 lg:p-7 rounded-2xl sm:rounded-3xl space-y-4">
+        <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>📈</span> % Change (From X to Y)
+        </h2>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">Initial Value (From)</label>
+          <input type="number" id="changeFrom" value="50" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+        </div>
+        <div>
+          <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1.5">Final Value (To)</label>
+          <input type="number" id="changeTo" value="75" class="w-full px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+        </div>
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+          <span class="text-xs text-slate-400 block">Percentage Change</span>
+          <span class="text-xl sm:text-2xl font-black text-cyan-600 dark:text-cyan-400" id="changeResult">+50.0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- User-Friendly Explanation Section -->
+    <article class="mt-8 sm:mt-10 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Mastering Everyday Percentage Math</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Percentages appear constantly in everyday life—from sales discounts and restaurant bills to stock market gains and pay raises. Here are 3 mental math secrets to calculate percentages instantly.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">💡</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">The Reversible Percentage Trick</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400"><code>x% of y = y% of x</code>. Need 16% of 50? Just calculate 50% of 16 instead, which is easily 8!</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">🏷️</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Fast Coupon Discount</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">To find 20% off, multiply by 0.8. To find 30% off, multiply by 0.7. For 15%, find 10% and add half of that number.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">📊</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Percentage Change vs Points</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">If interest rates rise from 4% to 5%, that is a 1 percentage point increase, but a 25% relative increase!</p>
+        </div>
+      </div>
+    </article>
+  </main>
+  </main>
+
+  <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
+    © 2026 CalcHub. All rights reserved.
+  </footer>
+
+  <script>
+    function calcDiscount() {
+      const orig = parseFloat(document.getElementById('discOriginal').value) || 0;
+      const pct = parseFloat(document.getElementById('discPercent').value) || 0;
+      const savings = orig * (pct / 100);
+      const finalPrice = Math.max(0, orig - savings);
+      document.getElementById('discFinal').textContent = CalcCurrency.format(finalPrice);
+      document.getElementById('discSavings').textContent = CalcCurrency.format(savings);
+    }
+
+    function calcOf() {
+      const x = parseFloat(document.getElementById('pctX').value) || 0;
+      const y = parseFloat(document.getElementById('pctY').value) || 0;
+      const res = (x / 100) * y;
+      document.getElementById('pctResult').textContent = res.toFixed(2);
+    }
+
+    function calcChange() {
+      const from = parseFloat(document.getElementById('changeFrom').value) || 0;
+      const to = parseFloat(document.getElementById('changeTo').value) || 0;
+      if (from === 0) {
+        document.getElementById('changeResult').textContent = 'N/A';
+        return;
+      }
+      const diff = to - from;
+      const pct = (diff / Math.abs(from)) * 100;
+      const sign = pct >= 0 ? '+' : '';
+      document.getElementById('changeResult').textContent = sign + pct.toFixed(1) + '%';
+    }
+
+    document.getElementById('discOriginal').addEventListener('input', calcDiscount);
+    document.getElementById('discPercent').addEventListener('input', calcDiscount);
+    document.getElementById('pctX').addEventListener('input', calcOf);
+    document.getElementById('pctY').addEventListener('input', calcOf);
+    document.getElementById('changeFrom').addEventListener('input', calcChange);
+    document.getElementById('changeTo').addEventListener('input', calcChange);
+    window.addEventListener('currencyChanged', calcDiscount);
+
+    calcDiscount();
+    calcOf();
+    calcChange();
+  </script>
+</body>
+</html>
