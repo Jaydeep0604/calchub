@@ -1,52 +1,47 @@
-# CalcHub - High-RPM Utility & Financial Calculator Suite
+# 🧮 CalcHub - Daily Life & Financial Calculator Suite
 
-A complete, production-ready suite of interactive financial and daily utility calculators designed to qualify for Google AdSense and maximize ad revenue.
+> **🌐 Live Website:** **[https://jaydeep0604.github.io/calchub/](https://jaydeep0604.github.io/calchub/)**  
+> **📦 GitHub Repository:** **[https://github.com/Jaydeep0604/calchub](https://github.com/Jaydeep0604/calchub)**
 
----
-
-## 📁 Project Structure
-
-```
-calc-hub/
-├── index.html                       # Directory / Homepage with live search & filters
-├── loan-calculator.html             # Loan & EMI Calculator with Chart.js & Amortization
-├── compound-interest-calculator.html # Compound Interest with interactive trajectory chart
-├── profit-margin-calculator.html    # Profit Margin & Markup Calculator with visual breakdown
-├── mortgage-payoff-calculator.html  # Mortgage Early Payoff & Interest Savings
-├── salary-calculator.html           # Hourly to Salary Converter
-├── percentage-calculator.html       # Discount & Percentage Math Tool
-├── privacy-policy.html              # Mandatory AdSense GDPR/CCPA & Cookie policy
-├── terms.html                       # Educational terms & liability disclaimer
-├── about.html                       # Company / Site mission & transparency
-├── contact.html                     # Contact & feedback form
-├── sitemap.xml                      # Google Search Console XML Sitemap
-└── robots.txt                       # Search engine crawler instructions
-```
+A modern, high-retention utility and calculator web platform built with a strictly cool obsidian/cyan/emerald theme, zero warm colors, 5 languages, 16 global currencies, and 100% responsive mobile-first UX.
 
 ---
 
-## ⚡ How to Preview Locally
+## 🚀 The 12 Flagship Calculators
 
-Simply double-click `index.html` or open any file in Google Chrome / Edge. No build step, no Node.js required.
-
----
-
-## 🚀 How to Deploy 100% Free
-
-### Option 1: Vercel (Recommended, 2 Minutes)
-1. Push this folder to a GitHub repository or drag-and-drop into [Vercel](https://vercel.com).
-2. It deploys automatically with free SSL and global CDN.
-
-### Option 2: Cloudflare Pages (Free Forever)
-1. Go to [Cloudflare Pages](https://pages.cloudflare.com).
-2. Connect your repository or upload the folder.
-3. Your site is live globally in seconds.
+1. **👥 Corporate Meeting Cost:** Live ticking stopwatch tracking dollar cost per second of meetings and Zoom calls.
+2. **🧾 Tip & Dining Bill Splitter:** Fair bill splitting with "Round Up Per Person" to eliminate awkward cents.
+3. **🌙 Sleep Cycle & Wake-Up:** 90-minute natural REM cycle calculator to wake up refreshed.
+4. **🚗 Fuel Cost & Commute:** Complete Metric (km, L) & Imperial (miles, MPG) switcher with carpool splits.
+5. **🥣 Recipe Serving Scaler:** Scalable ingredient multiplier with one-click clipboard copying.
+6. **🥗 Calorie Deficit & TDEE:** Mifflin-St Jeor formula with Metric/Imperial toggles and macro targets.
+7. **💳 Loan & EMI Planner:** Monthly payment calculator with interactive principal vs. interest chart and annual amortization.
+8. **📈 Compound Interest:** Multi-year wealth projections with monthly additions and Chart.js trajectory curve.
+9. **🏷️ Profit Margin & Markup:** Unit pricing calculator with donut cost breakdown.
+10. **💼 Hourly to Salary Converter:** Standard 2,080-hour conversion with weekly, bi-weekly, monthly, and annual metrics.
+11. **🏠 Mortgage Early Payoff:** Accelerated principal payment simulation showing total interest saved and years shaved off.
+12. **🔢 Percentage & Discounts:** Retail coupon discount tool, X% of Y, and percentage change.
 
 ---
 
-## 💰 How to Add Google AdSense
+## 🌍 Global Engines
 
-Once your domain is live and indexed in Google Search Console:
-1. Sign up at [Google AdSense](https://adsense.google.com).
-2. Add your site URL.
-3. Replace the placeholder containers (`class="ad-placeholder"`) with your Google AdSense ad units (`<ins class="adsbygoogle" ...></ins>`).
+- **Multi-Language (i18n):** English (`en`), Spanish (`es`), Hindi (`hi`), French (`fr`), and German (`de`) with persistent client-side storage.
+- **Multi-Currency:** 16 international currencies with localized symbol and decimal formatting.
+- **Obsidian Dark / Light Mode:** High-contrast cyber cool theme with system-preference detection.
+
+---
+
+## ⚡ Standalone Portability
+
+Double-click `index.html` or any calculator HTML file directly from File Explorer. No Node.js, `npm install`, or backend server required.
+
+---
+
+## 📜 Legal & Compliance
+
+- **Privacy Policy:** `privacy-policy.html` (GDPR/CCPA compliant, zero server tracking)
+- **Terms of Service:** `terms.html` (Educational disclaimers)
+- **About Page:** `about.html`
+- **Contact:** `contact.html`
+- **SEO:** `sitemap.xml` & `robots.txt`
