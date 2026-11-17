@@ -102,3 +102,19 @@ window.showToast = function(message = 'Copied to clipboard!') {
     toast.classList.remove('show');
   }, 2500);
 };
+
+/**
+ * Global Input UX Enhancement:
+ * Automatically select all text/number when user taps/clicks any input field
+ * so they don't have to repeatedly backspace default values.
+ */
+document.addEventListener('focus', function(e) {
+  if (e.target && (e.target.tagName === 'INPUT' && (e.target.type === 'number' || e.target.type === 'text'))) {
+    // Small timeout ensures touch and mouse events finish before selection
+    setTimeout(() => {
+      try {
+        e.target.select();
+      } catch (err) {}
+    }, 50);
+  }
+}, true);

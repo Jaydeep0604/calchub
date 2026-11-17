@@ -105,10 +105,10 @@
             <input type="range" id="initialDepositSlider" min="0" max="100000" step="500" value="5000" class="w-full">
           </div>
 
-          <!-- Monthly Addition -->
+          <!-- Monthly Contribution -->
           <div>
             <div class="flex flex-wrap justify-between items-center gap-2 mb-2.5">
-              <label for="monthlyContribution" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="monthly_addition">Monthly Addition</label>
+              <label for="monthlyContribution" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="monthly_contribution">Monthly Contribution</label>
               <div class="relative rounded-xl shadow-sm">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
                 <input type="number" id="monthlyContribution" value="300" min="0" max="50000" step="50"
@@ -403,6 +403,7 @@
       const PMT = parseFloat(monthlyContributionInput.value) || 0;
       const annualRate = (parseFloat(returnRateInput.value) || 0) / 100;
       const years = parseInt(investmentYearsInput.value) || 1;
+      const freq = parseInt(compoundFreqSelect.value) || 12;
 
       summaryYearsEl.textContent = years;
 
@@ -420,7 +421,24 @@
 
         for (let m = 1; m <= 12; m++) {
           balance += PMT;
-          balance += balance * (annualRate / 12);
+          if (freq === 12) {
+            // Monthly compounding
+            balance += balance * (annualRate / 12);
+          } else if (freq === 4) {
+            // Quarterly compounding (months 3, 6, 9, 12)
+            if (m % 3 === 0) {
+              balance += balance * (annualRate / 4);
+            }
+          } else if (freq === 1) {
+            // Annual compounding (applied at end of year)
+            if (m === 12) {
+              balance += balance * annualRate;
+            }
+          } else if (freq === 365) {
+            // Daily compounding
+            const daysInMonth = (m === 2) ? 28 : (m === 4 || m === 6 || m === 9 || m === 11 ? 30 : 31);
+            balance = balance * Math.pow(1 + (annualRate / 365), daysInMonth);
+          }
         }
 
         totalDeposited += yearDeposits;
@@ -483,7 +501,7 @@
     copyBtn.addEventListener('click', () => {
       const summaryText = `Compound Interest Projection:\n` +
         `• Starting Deposit: ${initialDepositInput.value}\n` +
-        `• Monthly Addition: ${monthlyContributionInput.value}\n` +
+        `• Monthly Contribution: ${monthlyContributionInput.value}\n` +
         `• Total Future Balance: ${futureBalanceEl.textContent}\n` +
         `• Principal Contributed: ${summaryPrincipalEl.textContent}\n` +
         `• Total Interest Earned: ${summaryInterestEl.textContent}\n` +

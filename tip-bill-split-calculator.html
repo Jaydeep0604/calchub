@@ -94,44 +94,87 @@
             </div>
           </div>
 
-          <!-- Tip Percentage Pills -->
+          <!-- Tip Mode & Presets -->
           <div>
-            <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block mb-2.5" data-i18n="tip_percentage">Tip Percentage</label>
-            <div class="grid grid-cols-5 gap-1.5 sm:gap-2" id="tipPresets">
-              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="10">10%</button>
-              <button type="button" class="tip-btn active px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 transition text-center" data-tip="15">15%</button>
-              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="18">18%</button>
-              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="20">20%</button>
-              <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="25">25%</button>
+            <div class="flex justify-between items-center mb-2.5">
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 block" data-i18n="tip_percentage">Tip Option</label>
+              <div class="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                <button type="button" id="tipModePct" class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition">Percentage (%)</button>
+                <button type="button" id="tipModeFlat" class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Flat Amount (<span class="currency-symbol">$</span>)</button>
+              </div>
             </div>
-            <div class="flex justify-between items-center mt-3">
-              <span class="text-xs text-slate-400">Or custom tip:</span>
-              <div class="relative rounded-xl shadow-sm">
-                <input type="number" id="customTip" value="15" min="0" max="100" step="1"
-                  class="w-20 pl-2 pr-6 py-1 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none">
-                <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 text-xs font-bold">%</span>
+
+            <!-- Percent Presets -->
+            <div id="tipPctContainer">
+              <div class="grid grid-cols-5 gap-1.5 sm:gap-2 mb-3" id="tipPresets">
+                <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="10">10%</button>
+                <button type="button" class="tip-btn active px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 transition text-center" data-tip="15">15%</button>
+                <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="18">18%</button>
+                <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="20">20%</button>
+                <button type="button" class="tip-btn px-1 py-2 sm:px-2 rounded-xl text-xs font-black border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition text-center" data-tip="25">25%</button>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-slate-400">Custom tip percentage:</span>
+                <div class="relative rounded-xl shadow-sm">
+                  <input type="number" id="customTip" value="15" min="0" max="100" step="1"
+                    class="w-20 pl-2 pr-6 py-1 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none">
+                  <span class="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 text-xs font-bold">%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flat Cash Tip Input -->
+            <div id="tipFlatContainer" class="hidden">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-slate-400">Enter exact tip amount:</span>
+                <div class="relative rounded-xl shadow-sm">
+                  <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-400 text-xs font-bold currency-symbol">$</span>
+                  <input type="number" id="flatTipAmount" value="10" min="0" step="1"
+                    class="w-28 pl-7 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none">
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Number of People -->
-          <div>
-            <div class="flex justify-between items-center mb-2.5">
-              <label for="peopleCount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="tip_split_between">Split Between</label>
-              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
-                <input type="number" id="peopleCount" value="3" min="1" max="100" step="1"
-                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                <span class="text-slate-500 font-normal" data-i18n="people">people</span>
+          <!-- Split Method: By Count or By Names -->
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between items-center mb-3">
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">Split Method</label>
+              <div class="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                <button type="button" id="splitModeSimple" class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition">Equal Count</button>
+                <button type="button" id="splitModeNamed" class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">By Names 👥</button>
               </div>
             </div>
-            <input type="range" id="peopleSlider" min="1" max="20" step="1" value="3" class="w-full">
+
+            <!-- Method 1: Simple Count -->
+            <div id="simpleCountSection">
+              <div class="flex justify-between items-center mb-2.5">
+                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Split Between</span>
+                <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                  <input type="number" id="peopleCount" value="3" min="1" max="100" step="1"
+                    class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                  <span class="text-slate-500 font-normal">people</span>
+                </div>
+              </div>
+              <input type="range" id="peopleSlider" min="1" max="20" step="1" value="3" class="w-full">
+            </div>
+
+            <!-- Method 2: Named People List -->
+            <div id="namedPeopleSection" class="hidden space-y-2.5">
+              <div id="namesList" class="space-y-2">
+                <!-- Dynamically generated rows -->
+              </div>
+              <button type="button" id="addPersonBtn" class="w-full py-2 border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-400 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 transition flex items-center justify-center gap-1.5">
+                <span>+</span> <span>Add Person</span>
+              </button>
+            </div>
           </div>
 
           <!-- Human-Centric Feature: Round Up Per Person Toggle -->
           <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div>
-              <label for="roundUpToggle" class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 cursor-pointer block" data-i18n="round_up_tip">Round up each person to whole dollar</label>
-              <span class="text-[11px] text-slate-400">Avoids awkward cent splits on Venmo / CashApp (e.g., $32.78 → $33.00)</span>
+              <label for="roundUpToggle" class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 cursor-pointer block" data-i18n="round_up_tip">Round up each person to whole number</label>
+              <span class="text-[11px] text-slate-400" id="roundUpSubtext">Avoids awkward cent splits on WhatsApp / UPI</span>
             </div>
             <input type="checkbox" id="roundUpToggle" class="w-5 h-5 rounded-lg text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 dark:bg-slate-800 cursor-pointer">
           </div>
@@ -148,9 +191,14 @@
         <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
           <div class="flex items-center justify-between mb-2">
             <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="tip_each_pays">Each Person Pays</h2>
-            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
-              <span>📋</span> <span data-i18n="copy">Copy</span>
-            </button>
+            <div class="flex items-center gap-1.5">
+              <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1">
+                <span>📋</span> <span data-i18n="copy">Copy</span>
+              </button>
+              <a id="whatsappBtn" target="_blank" href="#" class="px-2.5 py-1 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 transition flex items-center gap-1">
+                <span>💬</span> <span>WhatsApp</span>
+              </a>
+            </div>
           </div>
 
           <div class="text-4xl sm:text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight" id="eachPersonPay">$32.78</div>
@@ -158,8 +206,16 @@
 
           <!-- Bonus Server Tip Indicator if Rounded -->
           <div id="bonusTipContainer" class="hidden mt-3 p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800/40 text-xs flex justify-between items-center">
-            <span class="text-cyan-700 dark:text-cyan-300 font-semibold">Bonus cents to server:</span>
+            <span class="text-cyan-700 dark:text-cyan-300 font-semibold">Bonus to server:</span>
             <span class="font-black text-cyan-700 dark:text-cyan-300" id="bonusTipAmount">+$0.67</span>
+          </div>
+
+          <!-- Named Breakdown List (If in Named Mode) -->
+          <div id="namedBreakdownContainer" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Individual Shares</span>
+            <div id="namedSharesList" class="space-y-1.5">
+              <!-- Dynamically populated -->
+            </div>
           </div>
 
           <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5 text-sm">
@@ -168,7 +224,7 @@
               <span class="font-bold text-slate-900 dark:text-white" id="summaryBill">$85.50</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-slate-600 dark:text-slate-400"><span data-i18n="tip_total_tip">Total Tip</span> (<span id="summaryTipRate">15</span>%)</span>
+              <span class="text-slate-600 dark:text-slate-400"><span data-i18n="tip_total_tip">Total Tip</span> (<span id="summaryTipRate">15%</span>)</span>
               <span class="font-bold text-cyan-600 dark:text-cyan-400" id="summaryTipAmount">$12.83</span>
             </div>
             <div class="flex justify-between items-center">
@@ -182,10 +238,13 @@
           </div>
         </div>
 
-        <!-- Venmo / Share Text Box -->
-        <div class="premium-card rounded-3xl p-5">
-          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ready to Message Group</h3>
-          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-mono bg-slate-50 dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700" id="sharePreview">
+        <!-- Ready to Message Group -->
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-5">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ready to Message Group</h3>
+            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">1-Click Share</span>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-mono bg-slate-50 dark:bg-slate-800/80 p-3 rounded-xl border border-slate-200 dark:border-slate-700 break-words" id="sharePreview">
             Hey everyone! Total was $98.33 with tip. It splits to $32.78 each for 3 people.
           </p>
         </div>
@@ -248,12 +307,29 @@
   <script>
     const billAmountInput = document.getElementById('billAmount');
     const customTipInput = document.getElementById('customTip');
+    const flatTipAmountInput = document.getElementById('flatTipAmount');
     const tipBtns = document.querySelectorAll('.tip-btn');
     const peopleCountInput = document.getElementById('peopleCount');
     const peopleSlider = document.getElementById('peopleSlider');
     const roundUpToggle = document.getElementById('roundUpToggle');
     const resetBtn = document.getElementById('resetBtn');
     const copyBtn = document.getElementById('copyBtn');
+    const whatsappBtn = document.getElementById('whatsappBtn');
+
+    // Mode toggles
+    const tipModePctBtn = document.getElementById('tipModePct');
+    const tipModeFlatBtn = document.getElementById('tipModeFlat');
+    const tipPctContainer = document.getElementById('tipPctContainer');
+    const tipFlatContainer = document.getElementById('tipFlatContainer');
+
+    const splitModeSimpleBtn = document.getElementById('splitModeSimple');
+    const splitModeNamedBtn = document.getElementById('splitModeNamed');
+    const simpleCountSection = document.getElementById('simpleCountSection');
+    const namedPeopleSection = document.getElementById('namedPeopleSection');
+    const namesList = document.getElementById('namesList');
+    const addPersonBtn = document.getElementById('addPersonBtn');
+    const namedBreakdownContainer = document.getElementById('namedBreakdownContainer');
+    const namedSharesList = document.getElementById('namedSharesList');
 
     const eachPersonPayEl = document.getElementById('eachPersonPay');
     const summaryPeopleEl = document.getElementById('summaryPeople');
@@ -266,24 +342,117 @@
     const bonusTipAmountEl = document.getElementById('bonusTipAmount');
     const sharePreviewEl = document.getElementById('sharePreview');
 
-    let currentTipPercent = 15;
+    let isFlatTip = false;
+    let isNamedMode = false;
+    let namedPeople = ['Hardik', 'Jaydeep'];
+
+    // Tip mode switching
+    tipModePctBtn.addEventListener('click', () => {
+      isFlatTip = false;
+      tipModePctBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      tipModePctBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
+      tipModeFlatBtn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      tipModeFlatBtn.classList.add('text-slate-500', 'dark:text-slate-400');
+      tipPctContainer.classList.remove('hidden');
+      tipFlatContainer.classList.add('hidden');
+      calculateTip();
+    });
+
+    tipModeFlatBtn.addEventListener('click', () => {
+      isFlatTip = true;
+      tipModeFlatBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      tipModeFlatBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
+      tipModePctBtn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      tipModePctBtn.classList.add('text-slate-500', 'dark:text-slate-400');
+      tipFlatContainer.classList.remove('hidden');
+      tipPctContainer.classList.add('hidden');
+      calculateTip();
+    });
+
+    // Split mode switching
+    splitModeSimpleBtn.addEventListener('click', () => {
+      isNamedMode = false;
+      splitModeSimpleBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      splitModeSimpleBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
+      splitModeNamedBtn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      splitModeNamedBtn.classList.add('text-slate-500', 'dark:text-slate-400');
+      simpleCountSection.classList.remove('hidden');
+      namedPeopleSection.classList.add('hidden');
+      namedBreakdownContainer.classList.add('hidden');
+      calculateTip();
+    });
+
+    splitModeNamedBtn.addEventListener('click', () => {
+      isNamedMode = true;
+      splitModeNamedBtn.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      splitModeNamedBtn.classList.remove('text-slate-500', 'dark:text-slate-400');
+      splitModeSimpleBtn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      splitModeSimpleBtn.classList.add('text-slate-500', 'dark:text-slate-400');
+      namedPeopleSection.classList.remove('hidden');
+      simpleCountSection.classList.add('hidden');
+      renderNamesList();
+      calculateTip();
+    });
+
+    function renderNamesList() {
+      namesList.innerHTML = '';
+      namedPeople.forEach((name, idx) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2';
+        row.innerHTML = `
+          <input type="text" value="${name}" data-idx="${idx}" class="person-name-input flex-1 px-3 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Person name">
+          ${namedPeople.length > 1 ? `<button type="button" data-idx="${idx}" class="remove-person-btn w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-cyan-500 text-xs font-bold transition flex items-center justify-center">✕</button>` : ''}
+        `;
+        namesList.appendChild(row);
+      });
+
+      document.querySelectorAll('.person-name-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          namedPeople[e.target.dataset.idx] = e.target.value;
+          calculateTip();
+        });
+      });
+
+      document.querySelectorAll('.remove-person-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx);
+          namedPeople.splice(idx, 1);
+          renderNamesList();
+          calculateTip();
+        });
+      });
+    }
+
+    addPersonBtn.addEventListener('click', () => {
+      namedPeople.push(`Friend ${namedPeople.length + 1}`);
+      renderNamesList();
+      calculateTip();
+    });
 
     function calculateTip() {
       const bill = Math.max(0, parseFloat(billAmountInput.value) || 0);
-      const tipPct = Math.max(0, parseFloat(customTipInput.value) || 0);
-      const people = Math.max(1, parseInt(peopleCountInput.value) || 1);
+      const people = isNamedMode ? Math.max(1, namedPeople.length) : Math.max(1, parseInt(peopleCountInput.value) || 1);
       const shouldRoundUp = roundUpToggle.checked;
 
-      summaryPeopleEl.textContent = people;
-      summaryTipRateEl.textContent = tipPct;
+      let tipAmount = 0;
+      let tipRateDisplay = '';
 
-      const rawTip = bill * (tipPct / 100);
-      const rawTotalBill = bill + rawTip;
+      if (isFlatTip) {
+        tipAmount = Math.max(0, parseFloat(flatTipAmountInput.value) || 0);
+        const equivalentPct = bill > 0 ? ((tipAmount / bill) * 100).toFixed(1) : 0;
+        tipRateDisplay = `${CalcCurrency.format(tipAmount)} (${equivalentPct}%)`;
+      } else {
+        const tipPct = Math.max(0, parseFloat(customTipInput.value) || 0);
+        tipAmount = bill * (tipPct / 100);
+        tipRateDisplay = `${tipPct}%`;
+      }
+
+      const rawTotalBill = bill + tipAmount;
       const rawPerPerson = rawTotalBill / people;
 
       let finalPerPerson = rawPerPerson;
       let finalTotal = rawTotalBill;
-      let finalTip = rawTip;
+      let finalTip = tipAmount;
 
       if (shouldRoundUp) {
         finalPerPerson = Math.ceil(rawPerPerson);
@@ -303,13 +472,46 @@
 
       const tipPerPerson = finalTip / people;
 
+      summaryPeopleEl.textContent = people;
+      summaryTipRateEl.textContent = tipRateDisplay;
       eachPersonPayEl.textContent = CalcCurrency.format(finalPerPerson);
       summaryBillEl.textContent = CalcCurrency.format(bill);
       summaryTipAmountEl.textContent = CalcCurrency.format(finalTip);
       summaryTipPerPersonEl.textContent = CalcCurrency.format(tipPerPerson);
       summaryTotalBillEl.textContent = CalcCurrency.format(finalTotal);
 
-      sharePreviewEl.textContent = `Hey everyone! Total check is ${CalcCurrency.format(finalTotal)} (including ${tipPct}% tip). Split between ${people} people = ${CalcCurrency.format(finalPerPerson)} each!`;
+      // Render Named Breakdown if in named mode
+      if (isNamedMode) {
+        namedBreakdownContainer.classList.remove('hidden');
+        let namesHtml = '';
+        namedPeople.forEach(name => {
+          const displayName = name.trim() || 'Guest';
+          namesHtml += `
+            <div class="flex justify-between items-center text-xs py-1 px-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+              <span class="font-bold text-slate-800 dark:text-slate-200">👤 ${displayName}</span>
+              <span class="font-black text-emerald-600 dark:text-emerald-400">${CalcCurrency.format(finalPerPerson)}</span>
+            </div>
+          `;
+        });
+        namedSharesList.innerHTML = namesHtml;
+      } else {
+        namedBreakdownContainer.classList.add('hidden');
+      }
+
+      // Generate share text
+      let shareMsg = '';
+      if (isNamedMode) {
+        shareMsg = `🧾 Dinner Bill Split:\n• Total Bill: ${CalcCurrency.format(finalTotal)} (Tip: ${CalcCurrency.format(finalTip)})\n• Splitting between ${people} people (${CalcCurrency.format(finalPerPerson)} each):\n`;
+        namedPeople.forEach(n => {
+          shareMsg += `  - ${n.trim() || 'Guest'}: ${CalcCurrency.format(finalPerPerson)}\n`;
+        });
+        shareMsg += `Calculated on CalcHub.`;
+      } else {
+        shareMsg = `🧾 Dinner Bill Split:\n• Total Bill: ${CalcCurrency.format(finalTotal)} (Food: ${CalcCurrency.format(bill)}, Tip: ${CalcCurrency.format(finalTip)})\n• Split between ${people} people = ${CalcCurrency.format(finalPerPerson)} each!\nCalculated on CalcHub.`;
+      }
+
+      sharePreviewEl.textContent = shareMsg;
+      whatsappBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}`;
     }
 
     tipBtns.forEach(btn => {
@@ -332,6 +534,7 @@
       calculateTip();
     });
 
+    flatTipAmountInput.addEventListener('input', calculateTip);
     billAmountInput.addEventListener('input', calculateTip);
     peopleCountInput.addEventListener('input', () => { peopleSlider.value = peopleCountInput.value; calculateTip(); });
     peopleSlider.addEventListener('input', () => { peopleCountInput.value = peopleSlider.value; calculateTip(); });
@@ -340,9 +543,13 @@
     resetBtn.addEventListener('click', () => {
       billAmountInput.value = '85.50';
       customTipInput.value = '15';
+      flatTipAmountInput.value = '10';
       peopleCountInput.value = '3';
       peopleSlider.value = '3';
       roundUpToggle.checked = false;
+      namedPeople = ['Hardik', 'Jaydeep'];
+      splitModeSimpleBtn.click();
+      tipModePctBtn.click();
       document.querySelector('.tip-btn[data-tip="15"]').click();
       calculateTip();
     });
@@ -354,6 +561,8 @@
     });
 
     window.addEventListener('currencyChanged', calculateTip);
+    calculateTip();
+  </script>
     calculateTip();
   </script>
 </body>

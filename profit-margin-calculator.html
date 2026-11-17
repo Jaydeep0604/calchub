@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profit Margin & Markup Calculator - Business & E-Commerce Pricing</title>
-  <meta name="description" content="Calculate gross profit margin, markup percentage, and net revenue from product cost and selling price. Free, instant business pricing tool.">
-  <meta name="keywords" content="profit margin calculator, markup calculator, gross margin, ecommerce pricing, cost of goods sold, profit calculator">
+  <title>Profit Margin & Markup Calculator - Business & Multi-Product Pricing</title>
+  <meta name="description" content="Calculate gross profit margin, markup percentage, GST/VAT, and multi-product inventory profit totals. Free, instant business pricing tool.">
+  <meta name="keywords" content="profit margin calculator, markup calculator, multi product profit calculator, ecommerce inventory margin, gross margin, gst profit calculator">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -15,7 +15,7 @@
         extend: {
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
-            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            brand: { 50: '#ecfeff', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490' },
             obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
           }
         }
@@ -34,7 +34,7 @@
   <script src="assets/js/i18n.js"></script>
   <script src="assets/js/currency.js"></script>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 sm:pb-0">
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white pb-16 sm:pb-0">
 
   <!-- Header -->
   <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
@@ -58,13 +58,6 @@
     </div>
   </header>
 
-  <!-- Ad Container (Hidden until approval) -->
-  <div class="ad-slot-container max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-4 w-full">
-    <div class="border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-2 text-center text-xs text-slate-400 uppercase tracking-widest font-semibold flex items-center justify-center h-20">
-      <span>Advertisement Space (Google AdSense Header)</span>
-    </div>
-  </div>
-
   <!-- Breadcrumbs & Heading -->
   <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4 w-full">
     <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
@@ -72,18 +65,177 @@
       <span>/</span>
       <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="margin_title">Profit Margin & Markup</span>
     </nav>
-    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="margin_title">Profit Margin & Markup Calculator</h1>
-      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
-        💰 Business & Commerce
-      </span>
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="margin_title">Profit Margin & Markup Calculator</h1>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+            💰 Business & Commerce
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="margin_subtitle">Calculate single unit pricing or full multi-product inventory margins with discount and GST.</p>
+      </div>
+
+      <!-- Mode Selector Tabs -->
+      <div class="inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-bold">
+        <button type="button" id="tabMultiMode" class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition">
+          📦 Multi-Product Cart
+        </button>
+        <button type="button" id="tabSingleMode" class="px-3.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+          🏷️ Single Item
+        </button>
+      </div>
     </div>
-    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="margin_subtitle">Determine selling prices, gross margins, and markups to ensure healthy business profitability.</p>
   </div>
 
   <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
 
+    <!-- ========================================== -->
+    <!-- MODE 1: MULTI-PRODUCT INVENTORY CART MODE -->
+    <!-- ========================================== -->
+    <div id="multiModeSection" class="space-y-6 sm:space-y-8">
+      
+      <!-- Top Form: Add New Product -->
+      <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-5">
+          <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>➕</span> Add Product to Inventory Cart
+          </h2>
+          <span class="text-xs text-slate-500 font-medium">Automatic Margin & GST Tracking</span>
+        </div>
+
+        <form id="addProductForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 items-end">
+          <!-- Product Name -->
+          <div class="lg:col-span-2">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Product Name</label>
+            <input type="text" id="newProdName" placeholder="e.g. Wireless Mouse" required
+              class="w-full px-3 py-2 text-sm font-semibold rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+          </div>
+
+          <!-- Cost Price -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Cost Price (CP)</label>
+            <div class="relative rounded-xl shadow-sm">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs font-bold currency-symbol">$</span>
+              <input type="number" id="newProdCost" placeholder="400" min="0.01" step="0.5" required
+                class="w-full pl-7 pr-3 py-2 text-right text-sm font-black rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Selling Price -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Sell Price (SP)</label>
+            <div class="relative rounded-xl shadow-sm">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs font-bold currency-symbol">$</span>
+              <input type="number" id="newProdSell" placeholder="750" min="0.01" step="0.5" required
+                class="w-full pl-7 pr-3 py-2 text-right text-sm font-black rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Quantity -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Qty</label>
+            <input type="number" id="newProdQty" value="1" min="1" step="1" required
+              class="w-full px-3 py-2 text-center text-sm font-black rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+          </div>
+
+          <!-- Discount % & GST -->
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Disc %</label>
+              <input type="number" id="newProdDisc" value="0" min="0" max="100" step="1"
+                class="w-full px-2 py-2 text-center text-sm font-bold rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">GST %</label>
+              <select id="newProdGst" class="w-full px-1.5 py-2 text-xs font-bold rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none">
+                <option value="0">0%</option>
+                <option value="5">5%</option>
+                <option value="12">12%</option>
+                <option value="18" selected>18%</option>
+                <option value="28">28%</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Add Button -->
+          <div class="sm:col-span-2 lg:col-span-6 flex justify-end mt-2">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white dark:text-slate-950 text-sm font-black shadow-md transition flex items-center gap-1.5">
+              <span>➕</span> <span>Add Product to List</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Inventory Items Table -->
+      <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>📋</span> Added Product Items (<span id="cartCount">0</span>)
+          </h3>
+          <div class="flex items-center gap-2">
+            <button id="clearCartBtn" class="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition">Clear All</button>
+            <button id="shareCartWhatsAppBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition flex items-center gap-1">
+              <span>💬</span> <span>Share Summary</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto table-scroll-container">
+          <table class="w-full text-left text-xs whitespace-nowrap min-w-[760px]">
+            <thead>
+              <tr class="text-slate-400 font-bold uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+                <th class="py-2.5 px-3">Product</th>
+                <th class="py-2.5 px-3 text-right">Cost Price</th>
+                <th class="py-2.5 px-3 text-right">Sell Price</th>
+                <th class="py-2.5 px-3 text-center">Qty</th>
+                <th class="py-2.5 px-3 text-center">Disc / GST</th>
+                <th class="py-2.5 px-3 text-right">Final Bill</th>
+                <th class="py-2.5 px-3 text-right">Net Profit</th>
+                <th class="py-2.5 px-3 text-right">Margin / Markup</th>
+                <th class="py-2.5 px-3 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="cartTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 font-medium text-slate-700 dark:text-slate-200">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom Aggregate Dashboard Tiles -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Total Sales (Bill)</span>
+          <span class="text-lg sm:text-xl font-black text-cyan-400" id="totalSalesVal">$0.00</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Total Cost</span>
+          <span class="text-lg sm:text-xl font-black text-slate-300" id="totalCostVal">$0.00</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">GST Collected</span>
+          <span class="text-lg sm:text-xl font-black text-indigo-400" id="totalGstVal">$0.00</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Net Profit</span>
+          <span class="text-lg sm:text-xl font-black text-emerald-400" id="totalProfitVal">$0.00</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Overall Margin</span>
+          <span class="text-lg sm:text-xl font-black text-white" id="overallMarginVal">0.0%</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Overall Markup</span>
+          <span class="text-lg sm:text-xl font-black text-cyan-300" id="overallMarkupVal">0.0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODE 2: SINGLE PRODUCT PRICING (EXISTING)  -->
+    <!-- ========================================== -->
+    <div id="singleModeSection" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
       <!-- Left Column: Inputs (7 cols) -->
       <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
         <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
@@ -98,7 +250,7 @@
               <div class="relative rounded-xl shadow-sm">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
                 <input type="number" id="itemCost" value="45.00" min="0.01" step="0.5"
-                  class="w-32 sm:w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                  class="w-32 sm:w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
               </div>
             </div>
             <p class="text-[11px] text-slate-400 dark:text-slate-500">Total manufacturing, wholesale, or purchase cost per unit.</p>
@@ -111,7 +263,7 @@
               <div class="relative rounded-xl shadow-sm">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
                 <input type="number" id="sellingPrice" value="90.00" min="0.01" step="0.5"
-                  class="w-32 sm:w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                  class="w-32 sm:w-36 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
               </div>
             </div>
             <p class="text-[11px] text-slate-400 dark:text-slate-500">Final price charged to your customer.</p>
@@ -124,7 +276,7 @@
               <div class="relative rounded-xl shadow-sm">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
                 <input type="number" id="extraFees" value="5.00" min="0" step="0.5"
-                  class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                  class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
               </div>
             </div>
             <p class="text-[11px] text-slate-400 dark:text-slate-500">Packaging, platform commission, or fulfillment cost per unit.</p>
@@ -133,7 +285,7 @@
 
         <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
           <span>💡 Margin is based on revenue; Markup is based on unit cost.</span>
-          <button id="resetBtn" class="text-brand-600 dark:text-emerald-400 font-bold hover:underline" data-i18n="reset_default">Reset</button>
+          <button id="resetSingleBtn" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline" data-i18n="reset_default">Reset</button>
         </div>
       </div>
 
@@ -142,7 +294,7 @@
         <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
           <div class="flex items-center justify-between mb-2">
             <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="net_profit_unit">Net Profit Per Unit</h2>
-            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+            <button id="copySingleBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
               <span>📋</span> <span data-i18n="copy_summary">Copy</span>
             </button>
           </div>
@@ -182,7 +334,7 @@
       <div>
         <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Margin vs Markup: What's the Difference?</h2>
         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-          While both metrics express profitability, they use different denominators. <strong>Margin</strong> is the percentage of final sale price that you keep as profit. <strong>Markup</strong> is the percentage added on top of your wholesale cost. Confusing the two is one of the most common reasons new businesses underprice products.
+          While both metrics express profitability, they use different denominators. <strong>Margin</strong> is the percentage of final sale price that you keep as profit. <strong>Markup</strong> is the percentage added on top of your wholesale cost. Confusing the two is one of the most common reasons businesses underprice products.
         </p>
       </div>
 
@@ -198,9 +350,9 @@
           <p class="text-xs text-slate-500 dark:text-slate-400"><code>(Profit ÷ Cost) × 100</code>. A $40 profit on a $60 cost represents a 66.7% markup on cost.</p>
         </div>
         <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
-          <span class="text-2xl mb-2 block">🛡️</span>
-          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Hidden Overhead</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Always factor in credit card processing (2.9%), returns (~3-5%), and shipping materials into unit fees.</p>
+          <span class="text-2xl mb-2 block">📦</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Inventory Cart & Taxes</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Track multi-item batches with discounted sale prices and GST/VAT to know your exact total bottom-line profit.</p>
         </div>
       </div>
     </article>
@@ -210,24 +362,205 @@
   <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-2 text-slate-900 dark:text-white font-bold">
-        <span class="w-6 h-6 rounded-md bg-brand-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center text-xs font-bold">%</span>
+        <span class="w-6 h-6 rounded-md bg-cyan-600 dark:bg-emerald-500 text-white dark:text-slate-950 flex items-center justify-center text-xs font-bold">%</span>
         CalcHub
-      </div>
-      <div class="flex gap-4">
-        <a href="index.html" class="hover:text-slate-900 dark:hover:text-white transition">All Calculators</a>
-        <a href="privacy-policy.html" class="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</a>
-        <a href="terms.html" class="hover:text-slate-900 dark:hover:text-white transition">Terms of Use</a>
       </div>
       <div>© 2026 CalcHub. All calculations are for educational purposes.</div>
     </div>
   </footer>
 
   <script>
+    // Tab Switching
+    const tabMultiMode = document.getElementById('tabMultiMode');
+    const tabSingleMode = document.getElementById('tabSingleMode');
+    const multiModeSection = document.getElementById('multiModeSection');
+    const singleModeSection = document.getElementById('singleModeSection');
+
+    tabMultiMode.addEventListener('click', () => {
+      tabMultiMode.className = 'px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition';
+      tabSingleMode.className = 'px-3.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+      multiModeSection.classList.remove('hidden');
+      singleModeSection.classList.add('hidden');
+      singleModeSection.classList.remove('grid');
+    });
+
+    tabSingleMode.addEventListener('click', () => {
+      tabSingleMode.className = 'px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition';
+      tabMultiMode.className = 'px-3.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+      singleModeSection.classList.remove('hidden');
+      singleModeSection.classList.add('grid');
+      multiModeSection.classList.add('hidden');
+      calculateSingleMargin();
+    });
+
+    // -------------------------------------------------------------------------
+    // MULTI-PRODUCT CART LOGIC
+    // -------------------------------------------------------------------------
+    let cartProducts = [
+      { id: 1, name: 'Ergonomic Desk Chair', cost: 3500, sell: 6500, qty: 2, disc: 10, gst: 18 },
+      { id: 2, name: 'Mechanical Keyboard', cost: 1800, sell: 3200, qty: 3, disc: 5, gst: 18 }
+    ];
+
+    const addProductForm = document.getElementById('addProductForm');
+    const newProdName = document.getElementById('newProdName');
+    const newProdCost = document.getElementById('newProdCost');
+    const newProdSell = document.getElementById('newProdSell');
+    const newProdQty = document.getElementById('newProdQty');
+    const newProdDisc = document.getElementById('newProdDisc');
+    const newProdGst = document.getElementById('newProdGst');
+
+    const cartTableBody = document.getElementById('cartTableBody');
+    const cartCount = document.getElementById('cartCount');
+    const clearCartBtn = document.getElementById('clearCartBtn');
+
+    const totalSalesVal = document.getElementById('totalSalesVal');
+    const totalCostVal = document.getElementById('totalCostVal');
+    const totalGstVal = document.getElementById('totalGstVal');
+    const totalProfitVal = document.getElementById('totalProfitVal');
+    const overallMarginVal = document.getElementById('overallMarginVal');
+    const overallMarkupVal = document.getElementById('overallMarkupVal');
+
+    function renderCart() {
+      cartTableBody.innerHTML = '';
+      cartCount.textContent = cartProducts.length;
+
+      let aggSales = 0;
+      let aggCost = 0;
+      let aggGst = 0;
+      let aggProfit = 0;
+
+      if (cartProducts.length === 0) {
+        cartTableBody.innerHTML = `
+          <tr>
+            <td colspan="9" class="py-8 text-center text-slate-400 font-medium">
+              No products added yet. Use the form above to add your first product.
+            </td>
+          </tr>
+        `;
+      } else {
+        cartProducts.forEach((p, idx) => {
+          const unitCost = p.cost;
+          const discountedSell = p.sell * (1 - (p.disc / 100));
+          const unitGst = discountedSell * (p.gst / 100);
+          const finalUnitBill = discountedSell + unitGst;
+
+          const totalItemCost = unitCost * p.qty;
+          const totalItemBill = finalUnitBill * p.qty;
+          const totalItemGst = unitGst * p.qty;
+          // Net profit = (discountedSell - unitCost) * qty
+          const itemNetProfit = (discountedSell - unitCost) * p.qty;
+
+          const itemMargin = discountedSell > 0 ? ((discountedSell - unitCost) / discountedSell) * 100 : 0;
+          const itemMarkup = unitCost > 0 ? ((discountedSell - unitCost) / unitCost) * 100 : 0;
+
+          aggSales += totalItemBill;
+          aggCost += totalItemCost;
+          aggGst += totalItemGst;
+          aggProfit += itemNetProfit;
+
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition';
+          tr.innerHTML = `
+            <td class="py-3 px-3 font-bold text-slate-900 dark:text-white">${p.name}</td>
+            <td class="py-3 px-3 text-right font-medium text-slate-500">${CalcCurrency.format(p.cost)}</td>
+            <td class="py-3 px-3 text-right font-semibold text-slate-800 dark:text-slate-200">${CalcCurrency.format(p.sell)}</td>
+            <td class="py-3 px-3 text-center font-bold">${p.qty}</td>
+            <td class="py-3 px-3 text-center text-slate-400">${p.disc}% / ${p.gst}%</td>
+            <td class="py-3 px-3 text-right font-bold text-cyan-600 dark:text-cyan-400">${CalcCurrency.format(totalItemBill)}</td>
+            <td class="py-3 px-3 text-right font-black ${itemNetProfit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}">${CalcCurrency.format(itemNetProfit)}</td>
+            <td class="py-3 px-3 text-right font-semibold text-slate-700 dark:text-slate-300">${itemMargin.toFixed(1)}% / ${itemMarkup.toFixed(1)}%</td>
+            <td class="py-3 px-3 text-center">
+              <button type="button" class="delete-prod-btn text-slate-400 hover:text-cyan-500 transition text-sm p-1" data-idx="${idx}" title="Remove item">
+                ✕
+              </button>
+            </td>
+          `;
+          cartTableBody.appendChild(tr);
+        });
+      }
+
+      const overallMargin = (aggSales - aggGst) > 0 ? (aggProfit / (aggSales - aggGst)) * 100 : 0;
+      const overallMarkup = aggCost > 0 ? (aggProfit / aggCost) * 100 : 0;
+
+      totalSalesVal.textContent = CalcCurrency.format(aggSales);
+      totalCostVal.textContent = CalcCurrency.format(aggCost);
+      totalGstVal.textContent = CalcCurrency.format(aggGst);
+      totalProfitVal.textContent = CalcCurrency.format(aggProfit);
+      overallMarginVal.textContent = overallMargin.toFixed(1) + '%';
+      overallMarkupVal.textContent = overallMarkup.toFixed(1) + '%';
+
+      // Attach delete handlers
+      document.querySelectorAll('.delete-prod-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.dataset.idx);
+          cartProducts.splice(index, 1);
+          renderCart();
+        });
+      });
+    }
+
+    addProductForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = newProdName.value.trim() || 'Custom Product';
+      const cost = Math.max(0.01, parseFloat(newProdCost.value) || 0);
+      const sell = Math.max(0.01, parseFloat(newProdSell.value) || 0);
+      const qty = Math.max(1, parseInt(newProdQty.value) || 1);
+      const disc = Math.max(0, Math.min(100, parseFloat(newProdDisc.value) || 0));
+      const gst = parseFloat(newProdGst.value) || 0;
+
+      cartProducts.push({
+        id: Date.now(),
+        name,
+        cost,
+        sell,
+        qty,
+        disc,
+        gst
+      });
+
+      newProdName.value = '';
+      newProdCost.value = '';
+      newProdSell.value = '';
+      newProdQty.value = '1';
+      newProdDisc.value = '0';
+      newProdGst.value = '18';
+
+      renderCart();
+      window.showToast('Product added to cart!');
+    });
+
+    clearCartBtn.addEventListener('click', () => {
+      cartProducts = [];
+      renderCart();
+    });
+
+    document.getElementById('shareCartWhatsAppBtn').addEventListener('click', () => {
+      if (cartProducts.length === 0) {
+        window.showToast('Cart is empty!');
+        return;
+      }
+      let summary = `📦 *Inventory Pricing & Profit Summary (CalcHub)*\n\n`;
+      cartProducts.forEach((p, i) => {
+        summary += `${i + 1}. *${p.name}* (Qty: ${p.qty}) - Cost: ${CalcCurrency.format(p.cost)}, Sell: ${CalcCurrency.format(p.sell)}\n`;
+      });
+      summary += `\n• *Total Sales:* ${totalSalesVal.textContent}\n` +
+        `• *Total Cost:* ${totalCostVal.textContent}\n` +
+        `• *Total GST:* ${totalGstVal.textContent}\n` +
+        `• *Net Profit:* ${totalProfitVal.textContent}\n` +
+        `• *Overall Margin:* ${overallMarginVal.textContent}\n\n` +
+        `Calculated via: ${window.location.href}`;
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(summary)}`;
+      window.open(url, '_blank');
+    });
+
+    // -------------------------------------------------------------------------
+    // SINGLE ITEM PRICING LOGIC (EXISTING)
+    // -------------------------------------------------------------------------
     const itemCostInput = document.getElementById('itemCost');
     const sellingPriceInput = document.getElementById('sellingPrice');
     const extraFeesInput = document.getElementById('extraFees');
-    const resetBtn = document.getElementById('resetBtn');
-    const copyBtn = document.getElementById('copyBtn');
+    const resetSingleBtn = document.getElementById('resetSingleBtn');
+    const copySingleBtn = document.getElementById('copySingleBtn');
 
     const netProfitEl = document.getElementById('netProfit');
     const summaryPriceEl = document.getElementById('summaryPrice');
@@ -267,7 +600,7 @@
       }
     }
 
-    function calculateMargin() {
+    function calculateSingleMargin() {
       const cost = Math.max(0, parseFloat(itemCostInput.value) || 0);
       const price = Math.max(0, parseFloat(sellingPriceInput.value) || 0);
       const fees = Math.max(0, parseFloat(extraFeesInput.value) || 0);
@@ -278,14 +611,6 @@
       const markup = totalCost > 0 ? (profit / totalCost) * 100 : 0;
 
       netProfitEl.textContent = (profit < 0 ? '-' : '') + CalcCurrency.format(Math.abs(profit));
-      if (profit < 0) {
-        netProfitEl.classList.remove('text-emerald-600', 'dark:text-emerald-400');
-        netProfitEl.classList.add('text-slate-500', 'dark:text-slate-400');
-      } else {
-        netProfitEl.classList.remove('text-slate-500', 'dark:text-slate-400');
-        netProfitEl.classList.add('text-emerald-600', 'dark:text-emerald-400');
-      }
-
       summaryPriceEl.textContent = CalcCurrency.format(price);
       marginPercentEl.textContent = margin.toFixed(1) + '%';
       markupPercentEl.textContent = markup.toFixed(1) + '%';
@@ -293,18 +618,18 @@
       updateMarginChart(cost, fees, Math.max(0, profit));
     }
 
-    itemCostInput.addEventListener('input', calculateMargin);
-    sellingPriceInput.addEventListener('input', calculateMargin);
-    extraFeesInput.addEventListener('input', calculateMargin);
+    itemCostInput.addEventListener('input', calculateSingleMargin);
+    sellingPriceInput.addEventListener('input', calculateSingleMargin);
+    extraFeesInput.addEventListener('input', calculateSingleMargin);
 
-    resetBtn.addEventListener('click', () => {
+    resetSingleBtn.addEventListener('click', () => {
       itemCostInput.value = '45.00';
       sellingPriceInput.value = '90.00';
       extraFeesInput.value = '5.00';
-      calculateMargin();
+      calculateSingleMargin();
     });
 
-    copyBtn.addEventListener('click', () => {
+    copySingleBtn.addEventListener('click', () => {
       const summaryText = `Pricing & Margin Breakdown:\n` +
         `• Selling Price: ${summaryPriceEl.textContent}\n` +
         `• Net Profit: ${netProfitEl.textContent}\n` +
@@ -316,8 +641,13 @@
       });
     });
 
-    window.addEventListener('currencyChanged', calculateMargin);
-    calculateMargin();
+    window.addEventListener('currencyChanged', () => {
+      renderCart();
+      calculateSingleMargin();
+    });
+
+    renderCart();
+    calculateSingleMargin();
   </script>
 </body>
 </html>

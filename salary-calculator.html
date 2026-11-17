@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hourly to Salary Calculator - Wage & Freelance Rate Converter</title>
-  <meta name="description" content="Convert hourly wage to annual salary, monthly, bi-weekly, and weekly pay. Includes overtime and freelance billable hours breakdown. Free and instant.">
-  <meta name="keywords" content="hourly to salary calculator, salary to hourly, wage converter, freelance billable rate, annual salary converter">
+  <title>Salary & CTC In-Hand Calculator - Hourly to Annual Wage Converter</title>
+  <meta name="description" content="Calculate monthly in-hand salary from annual CTC with PF, HRA, and tax deductions, or convert hourly wages into annual, monthly, and weekly income. Free, private, and instant.">
+  <meta name="keywords" content="ctc to in hand calculator, salary calculator, in hand salary calculator india, hourly to salary converter, take home salary, salary slip breakdown">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -15,7 +15,7 @@
         extend: {
           fontFamily: { sans: ['Inter', 'sans-serif'] },
           colors: {
-            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+            brand: { 50: '#ecfeff', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490' },
             obsidian: { 900: '#0b0f19', 800: '#111827', 700: '#1a2234', 600: '#242f47' }
           }
         }
@@ -33,7 +33,7 @@
   <script src="assets/js/i18n.js"></script>
   <script src="assets/js/currency.js"></script>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white pb-16 sm:pb-0">
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-white pb-16 sm:pb-0">
 
   <!-- Header -->
   <header class="sticky top-0 z-50 border-b transition-colors duration-200 nav-blur bg-white/90 dark:bg-obsidian-900/90 border-slate-200 dark:border-slate-800">
@@ -61,19 +61,261 @@
     <nav class="text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5 font-medium">
       <a href="index.html" class="hover:underline">Home</a>
       <span>/</span>
-      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="salary_title">Hourly to Salary Converter</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="salary_title">Salary & In-Hand Calculator</span>
     </nav>
-    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-      <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="salary_title">Hourly to Salary Converter</h1>
-      <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
-        💼 Career & Income
-      </span>
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight" data-i18n="salary_title">Salary & In-Hand Calculator</h1>
+          <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-bold bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">
+            💼 Career & Income
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="salary_sub">Calculate exact monthly take-home salary from your Annual CTC, or convert hourly wages to annual pay.</p>
+      </div>
+
+      <!-- Mode Selector Tabs -->
+      <div class="inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-bold">
+        <button type="button" id="tabCtcMode" class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition">
+          🏢 CTC to In-Hand
+        </button>
+        <button type="button" id="tabHourlyMode" class="px-3.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+          ⏱️ Hourly ↔ Salary
+        </button>
+      </div>
     </div>
-    <p class="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 mt-1" data-i18n="salary_sub">Convert your hourly wage into annual, monthly, and weekly income with customizable hours.</p>
   </div>
 
   <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-12 w-full flex-grow">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+
+    <!-- MODE 1: CTC TO IN-HAND CALCULATOR -->
+    <div id="ctcModeSection" class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+      <!-- Left Column: Inputs -->
+      <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 space-y-6">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>💼</span> Annual CTC & Package Details
+          </h2>
+          <span class="text-xs text-slate-500 font-medium">Standard Structure</span>
+        </div>
+
+        <!-- Annual CTC Input -->
+        <div>
+          <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+            <label for="annualCtcInput" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">
+              Total Annual CTC (Cost to Company)
+            </label>
+            <div class="relative rounded-xl shadow-sm">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+              <input type="number" id="annualCtcInput" value="600000" min="10000" step="5000"
+                class="w-36 sm:w-44 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+            </div>
+          </div>
+          <input type="range" id="ctcSlider" min="100000" max="5000000" step="50000" value="600000" class="w-full">
+          
+          <!-- Quick Preset CTC Pills -->
+          <div class="flex flex-wrap gap-1.5 mt-2.5">
+            <span class="text-[11px] text-slate-400 font-medium self-center mr-1">Quick Select:</span>
+            <button type="button" class="ctc-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/60 text-slate-700 dark:text-slate-300 transition" data-val="300000">300k</button>
+            <button type="button" class="ctc-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/60 text-slate-700 dark:text-slate-300 transition" data-val="600000">600k</button>
+            <button type="button" class="ctc-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/60 text-slate-700 dark:text-slate-300 transition" data-val="1000000">1.0M</button>
+            <button type="button" class="ctc-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/60 text-slate-700 dark:text-slate-300 transition" data-val="1500000">1.5M</button>
+            <button type="button" class="ctc-pill px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-cyan-50 dark:hover:bg-cyan-950/60 text-slate-700 dark:text-slate-300 transition" data-val="2500000">2.5M</button>
+          </div>
+        </div>
+
+        <!-- Breakdown Settings: Basic, HRA, Bonus -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-4">
+          <div class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Salary Components</div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Basic Salary % of CTC -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="basicPercentInput" class="text-xs font-bold text-slate-700 dark:text-slate-300">Basic Salary (% of CTC)</label>
+                <span class="text-xs font-black text-cyan-600 dark:text-cyan-400" id="basicPercentDisplay">50%</span>
+              </div>
+              <input type="range" id="basicPercentInput" min="30" max="60" step="5" value="50" class="w-full">
+              <span class="text-[10px] text-slate-400">Industry standard is 40% – 50%</span>
+            </div>
+
+            <!-- HRA % of Basic -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="hraPercentInput" class="text-xs font-bold text-slate-700 dark:text-slate-300">HRA (% of Basic)</label>
+                <span class="text-xs font-black text-cyan-600 dark:text-cyan-400" id="hraPercentDisplay">40%</span>
+              </div>
+              <input type="range" id="hraPercentInput" min="20" max="50" step="5" value="40" class="w-full">
+              <span class="text-[10px] text-slate-400">Metro: 50%, Non-Metro: 40%</span>
+            </div>
+          </div>
+
+          <!-- Annual Bonus (if any) -->
+          <div class="pt-2 border-t border-slate-200 dark:border-slate-700/60 flex flex-wrap justify-between items-center gap-2">
+            <div>
+              <label for="bonusInput" class="text-xs font-bold text-slate-700 dark:text-slate-300 block">Annual Bonus / Variable Pay</label>
+              <span class="text-[10px] text-slate-400">Included in CTC but paid annually/quarterly</span>
+            </div>
+            <div class="relative rounded-xl shadow-sm">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+              <input type="number" id="bonusInput" value="0" min="0" step="5000"
+                class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none">
+            </div>
+          </div>
+        </div>
+
+        <!-- Deductions Settings: PF & Professional Tax -->
+        <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-4">
+          <div class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Statutory Deductions</div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+            <!-- Employee PF -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="pfPercentInput" class="text-xs font-bold text-slate-700 dark:text-slate-300">Employee PF (% of Basic)</label>
+                <span class="text-xs font-black text-cyan-600 dark:text-cyan-400" id="pfPercentDisplay">12%</span>
+              </div>
+              <input type="range" id="pfPercentInput" min="0" max="12" step="1" value="12" class="w-full">
+              <span class="text-[10px] text-slate-400">Statutory standard: 12% (0% if opt-out)</span>
+            </div>
+
+            <!-- Professional Tax (PT) -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="ptMonthlyInput" class="text-xs font-bold text-slate-700 dark:text-slate-300">Monthly Professional Tax (PT)</label>
+                <div class="relative rounded-lg shadow-sm">
+                  <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-400 text-xs font-bold currency-symbol">$</span>
+                  <input type="number" id="ptMonthlyInput" value="200" min="0" max="2500" step="50"
+                    class="w-24 pl-6 pr-2 py-1 text-right font-black text-slate-900 dark:text-white bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:outline-none">
+                </div>
+              </div>
+              <span class="text-[10px] text-slate-400">Typically ₹200/mo (max ₹2,500/yr in India)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Work Hours & Days -->
+        <div class="flex flex-wrap justify-between items-center gap-3 pt-2 text-xs text-slate-600 dark:text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-700 dark:text-slate-300">Daily Hours:</span>
+            <input type="number" id="ctcDailyHours" value="8" min="1" max="16" class="w-14 px-2 py-1 text-center font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg">
+            <span>hrs/day</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-700 dark:text-slate-300">Work Days:</span>
+            <input type="number" id="ctcMonthlyDays" value="22" min="15" max="31" class="w-14 px-2 py-1 text-center font-bold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg">
+            <span>days/month</span>
+          </div>
+          <button id="resetCtcBtn" class="text-cyan-600 dark:text-cyan-400 font-bold hover:underline ml-auto" data-i18n="reset">Reset</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Results & Pay Slip Breakdown -->
+      <div class="lg:col-span-5 space-y-6">
+        <!-- Monthly In-Hand Hero Card -->
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Estimated Monthly In-Hand</h2>
+            <div class="flex items-center gap-1.5">
+              <button id="shareCtcWhatsAppBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition flex items-center gap-1">
+                <span>💬</span> <span>Share</span>
+              </button>
+              <button id="copyCtcBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1">
+                <span>📋</span> <span data-i18n="copy">Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="text-4xl sm:text-5xl font-black text-cyan-600 dark:text-cyan-400 tracking-tight" id="monthlyInHand">₹43,800</div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Net take-home amount credited every month</p>
+
+          <!-- Key Summary Stats -->
+          <div class="grid grid-cols-2 gap-3 mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Annual In-Hand</span>
+              <span class="text-base sm:text-lg font-black text-slate-900 dark:text-white" id="yearlyInHand">₹5,25,600</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Monthly Deductions</span>
+              <span class="text-base sm:text-lg font-black text-indigo-500 dark:text-indigo-400" id="totalMonthlyDeductions">₹3,200</span>
+            </div>
+          </div>
+
+          <!-- Micro Rates: Hourly, Daily, Weekly -->
+          <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40">
+              <span class="text-[10px] text-slate-400 block">Per Day</span>
+              <span class="text-xs font-black text-slate-800 dark:text-slate-200" id="dailyEarnings">₹1,991</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40">
+              <span class="text-[10px] text-slate-400 block">Per Hour</span>
+              <span class="text-xs font-black text-slate-800 dark:text-slate-200" id="hourlyEarnings">₹249</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40">
+              <span class="text-[10px] text-slate-400 block">Weekly</span>
+              <span class="text-xs font-black text-slate-800 dark:text-slate-200" id="weeklyEarnings">₹9,955</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Salary Slip Breakdown Card -->
+        <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 bg-slate-900 text-white dark:bg-slate-900 border-slate-800">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+            <span class="text-xs font-black uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+              <span>📑</span> <span>Estimated Monthly Salary Structure</span>
+            </span>
+            <span class="text-[11px] text-slate-400 font-medium">Monthly Pay Slip</span>
+          </div>
+
+          <!-- Earnings Table -->
+          <div class="space-y-2 text-xs">
+            <div class="text-[11px] font-black uppercase tracking-wider text-emerald-400 mb-1">Gross Earnings (+)</div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-300">Basic Salary</span>
+              <span class="font-bold text-white" id="slipBasic">₹25,000</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-300">HRA (House Rent Allowance)</span>
+              <span class="font-bold text-white" id="slipHra">₹10,000</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-300">Special Allowance / Other</span>
+              <span class="font-bold text-white" id="slipSpecial">₹12,000</span>
+            </div>
+            <div class="flex justify-between items-center py-1.5 font-bold text-cyan-400">
+              <span>Gross Monthly Salary</span>
+              <span id="slipGross">₹47,000</span>
+            </div>
+          </div>
+
+          <!-- Deductions Table -->
+          <div class="space-y-2 text-xs mt-4 pt-3 border-t border-slate-800">
+            <div class="text-[11px] font-black uppercase tracking-wider text-indigo-400 mb-1">Deductions (-)</div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-300">Employee PF (12%)</span>
+              <span class="font-bold text-slate-200" id="slipPf">₹3,000</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-300">Professional Tax (PT)</span>
+              <span class="font-bold text-slate-200" id="slipPt">₹200</span>
+            </div>
+            <div class="flex justify-between items-center py-1.5 font-bold text-indigo-300">
+              <span>Total Deductions</span>
+              <span id="slipTotalDeduct">₹3,200</span>
+            </div>
+          </div>
+
+          <!-- Bottom Net In-Hand Line -->
+          <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center">
+            <span class="text-xs font-black text-white uppercase tracking-wider">Net Monthly Take-Home:</span>
+            <span class="text-lg font-black text-cyan-400" id="slipNetInHand">₹43,800</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 2: HOURLY TO SALARY CONVERTER (EXISTING) -->
+    <div id="hourlyModeSection" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
       <div class="lg:col-span-7 premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
         <h2 class="text-base font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
           <span>💼</span> Pay & Hours Details
@@ -87,7 +329,7 @@
                 <div class="relative rounded-xl shadow-sm">
                   <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
                   <input type="number" id="payRate" value="35.00" min="1" step="0.5"
-                    class="w-28 sm:w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                    class="w-28 sm:w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                 </div>
                 <select id="payPeriod" class="text-xs font-bold py-1.5 px-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200">
                   <option value="hourly" selected>per Hour</option>
@@ -102,7 +344,7 @@
               <label for="hoursPerWeek" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="hours_per_week">Hours Worked Per Week</label>
               <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
                 <input type="number" id="hoursPerWeek" value="40" min="1" max="100" step="1"
-                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                 <span class="text-slate-500 font-normal">hrs</span>
               </div>
             </div>
@@ -114,7 +356,7 @@
               <label for="weeksPerYear" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="paid_weeks">Paid Weeks Per Year</label>
               <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
                 <input type="number" id="weeksPerYear" value="52" min="1" max="52" step="1"
-                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 dark:focus:ring-emerald-500 focus:outline-none">
+                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
                 <span class="text-slate-500 font-normal">weeks</span>
               </div>
             </div>
@@ -126,12 +368,12 @@
         <div class="premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
           <div class="flex items-center justify-between mb-2">
             <h2 class="text-xs font-extrabold text-slate-400 dark:text-slate-400 uppercase tracking-wider" data-i18n="total_annual_salary">Total Annual Salary</h2>
-            <button id="copyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
+            <button id="copyHourlyBtn" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1.5">
               <span>📋</span> <span data-i18n="copy_summary">Copy</span>
             </button>
           </div>
 
-          <div class="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-600 dark:text-emerald-400 tracking-tight" id="annualSalary">$72,800</div>
+          <div class="text-3xl sm:text-4xl lg:text-5xl font-black text-cyan-600 dark:text-cyan-400 tracking-tight" id="annualSalary">$72,800</div>
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Based on <span id="summaryHours" class="font-bold text-slate-900 dark:text-white">40</span> hours/week</p>
 
           <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3.5 text-sm">
@@ -159,37 +401,220 @@
     <!-- User-Friendly Explanation Section -->
     <article class="mt-8 sm:mt-10 max-w-7xl mx-auto premium-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 space-y-6 sm:space-y-8">
       <div>
-        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">How Hourly Wages Convert to Annual Salary</h2>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Understanding CTC vs In-Hand Take-Home Salary</h2>
         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-          In standard full-time employment, an employee works 40 hours per week for 52 weeks a year, totaling <strong>2,080 working hours</strong> annually. As a quick rule of thumb: double your hourly rate and add three zeros to get your approximate yearly salary (e.g., $35/hr ≈ $70,000–$72,800/yr).
+          <strong>CTC (Cost to Company)</strong> is the total amount an employer spends on an employee annually. However, your actual monthly bank deposit (<strong>In-Hand / Take-Home Pay</strong>) is lower because it excludes employee and employer PF contributions, professional tax, gratuity, and income tax (TDS).
         </p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
         <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
-          <span class="text-2xl mb-2 block">🗓️</span>
-          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Standard Full-Time (2,080 hrs)</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">40 hours × 52 weeks = 2,080 paid hours. If you receive 2 weeks unpaid leave, use 50 weeks instead.</p>
+          <span class="text-2xl mb-2 block">🏦</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Basic Salary & HRA</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Basic pay usually accounts for 40%–50% of your CTC. HRA is typically 40% of Basic (or 50% in metro cities like Mumbai, Delhi, Bengaluru) and is eligible for tax exemption if you pay rent.</p>
+        </div>
+        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
+          <span class="text-2xl mb-2 block">🛡️</span>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Provident Fund (PF)</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">12% of your Basic salary is deducted as your contribution to the Employee Provident Fund (EPF), which earns government-backed compounding interest toward retirement.</p>
         </div>
         <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
           <span class="text-2xl mb-2 block">⏱️</span>
-          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Overtime & 1.5x Multiplier</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">Non-exempt workers working beyond 40 hours per week are typically entitled to 1.5x time-and-a-half pay.</p>
-        </div>
-        <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60">
-          <span class="text-2xl mb-2 block">📑</span>
-          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Net vs Gross Pay</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">This calculator shows gross earnings before income tax, social security, health insurance, and 401(k) deductions.</p>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Hourly & Freelance Rate</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Standard full-time employment is 2,080 hours per year (40 hrs/week × 52 weeks). Use the Hourly converter tab when budgeting freelance projects or hourly contracts.</p>
         </div>
       </div>
     </article>
   </main>
 
   <footer class="bg-white dark:bg-obsidian-900 text-slate-500 dark:text-slate-400 text-xs py-8 border-t border-slate-200 dark:border-slate-800 text-center">
-    © 2026 CalcHub. All rights reserved.
+    © 2026 CalcHub. All calculations are for estimation and educational purposes.
   </footer>
 
   <script>
+    // Tab switching logic
+    const tabCtcMode = document.getElementById('tabCtcMode');
+    const tabHourlyMode = document.getElementById('tabHourlyMode');
+    const ctcModeSection = document.getElementById('ctcModeSection');
+    const hourlyModeSection = document.getElementById('hourlyModeSection');
+
+    tabCtcMode.addEventListener('click', () => {
+      tabCtcMode.className = 'px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition';
+      tabHourlyMode.className = 'px-3.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+      ctcModeSection.classList.remove('hidden');
+      ctcModeSection.classList.add('grid');
+      hourlyModeSection.classList.add('hidden');
+      hourlyModeSection.classList.remove('grid');
+    });
+
+    tabHourlyMode.addEventListener('click', () => {
+      tabHourlyMode.className = 'px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition';
+      tabCtcMode.className = 'px-3.5 py-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+      hourlyModeSection.classList.remove('hidden');
+      hourlyModeSection.classList.add('grid');
+      ctcModeSection.classList.add('hidden');
+      ctcModeSection.classList.remove('grid');
+    });
+
+    // ----------------------------------------------------
+    // CTC TO IN-HAND CALCULATOR LOGIC
+    // ----------------------------------------------------
+    const annualCtcInput = document.getElementById('annualCtcInput');
+    const ctcSlider = document.getElementById('ctcSlider');
+    const basicPercentInput = document.getElementById('basicPercentInput');
+    const basicPercentDisplay = document.getElementById('basicPercentDisplay');
+    const hraPercentInput = document.getElementById('hraPercentInput');
+    const hraPercentDisplay = document.getElementById('hraPercentDisplay');
+    const bonusInput = document.getElementById('bonusInput');
+    const pfPercentInput = document.getElementById('pfPercentInput');
+    const pfPercentDisplay = document.getElementById('pfPercentDisplay');
+    const ptMonthlyInput = document.getElementById('ptMonthlyInput');
+    const ctcDailyHours = document.getElementById('ctcDailyHours');
+    const ctcMonthlyDays = document.getElementById('ctcMonthlyDays');
+    const resetCtcBtn = document.getElementById('resetCtcBtn');
+
+    // Outputs
+    const monthlyInHand = document.getElementById('monthlyInHand');
+    const yearlyInHand = document.getElementById('yearlyInHand');
+    const totalMonthlyDeductions = document.getElementById('totalMonthlyDeductions');
+    const dailyEarnings = document.getElementById('dailyEarnings');
+    const hourlyEarnings = document.getElementById('hourlyEarnings');
+    const weeklyEarnings = document.getElementById('weeklyEarnings');
+
+    // Salary Slip Outputs
+    const slipBasic = document.getElementById('slipBasic');
+    const slipHra = document.getElementById('slipHra');
+    const slipSpecial = document.getElementById('slipSpecial');
+    const slipGross = document.getElementById('slipGross');
+    const slipPf = document.getElementById('slipPf');
+    const slipPt = document.getElementById('slipPt');
+    const slipTotalDeduct = document.getElementById('slipTotalDeduct');
+    const slipNetInHand = document.getElementById('slipNetInHand');
+
+    function calculateCtc() {
+      const ctc = Math.max(0, parseFloat(annualCtcInput.value) || 0);
+      const basicPercent = parseFloat(basicPercentInput.value) || 50;
+      const hraPercent = parseFloat(hraPercentInput.value) || 40;
+      const annualBonus = Math.max(0, parseFloat(bonusInput.value) || 0);
+      const pfPercent = parseFloat(pfPercentInput.value) || 12;
+      const ptMonthly = Math.max(0, parseFloat(ptMonthlyInput.value) || 0);
+      const dailyHours = Math.max(1, parseFloat(ctcDailyHours.value) || 8);
+      const workDays = Math.max(1, parseFloat(ctcMonthlyDays.value) || 22);
+
+      basicPercentDisplay.textContent = basicPercent + '%';
+      hraPercentDisplay.textContent = hraPercent + '%';
+      pfPercentDisplay.textContent = pfPercent + '%';
+
+      // Salary Structure Calculation:
+      const ctcBase = Math.max(0, ctc - annualBonus);
+      const basicAnnual = ctcBase * (basicPercent / 100);
+      const hraAnnual = basicAnnual * (hraPercent / 100);
+      
+      const specialAnnual = Math.max(0, ctcBase - (basicAnnual + hraAnnual));
+      
+      const basicMonthly = basicAnnual / 12;
+      const hraMonthly = hraAnnual / 12;
+      const specialMonthly = specialAnnual / 12;
+      const grossMonthly = basicMonthly + hraMonthly + specialMonthly;
+
+      // Deductions
+      const pfMonthly = basicMonthly * (pfPercent / 100);
+      const totalDeductionsMonthly = pfMonthly + ptMonthly;
+
+      // Net Monthly Take-Home
+      const inHandMonthly = Math.max(0, grossMonthly - totalDeductionsMonthly);
+      const inHandYearly = (inHandMonthly * 12) + annualBonus;
+
+      // Unit rates
+      const dailyEarn = inHandMonthly / workDays;
+      const hourlyEarn = dailyEarn / dailyHours;
+      const weeklyEarn = (inHandMonthly * 12) / 52;
+
+      // Populate summary
+      monthlyInHand.textContent = CalcCurrency.format(Math.round(inHandMonthly), 0);
+      yearlyInHand.textContent = CalcCurrency.format(Math.round(inHandYearly), 0);
+      totalMonthlyDeductions.textContent = CalcCurrency.format(Math.round(totalDeductionsMonthly), 0);
+      dailyEarnings.textContent = CalcCurrency.format(Math.round(dailyEarn), 0);
+      hourlyEarnings.textContent = CalcCurrency.format(Math.round(hourlyEarn), 0);
+      weeklyEarnings.textContent = CalcCurrency.format(Math.round(weeklyEarn), 0);
+
+      // Populate Slip
+      slipBasic.textContent = CalcCurrency.format(Math.round(basicMonthly), 0);
+      slipHra.textContent = CalcCurrency.format(Math.round(hraMonthly), 0);
+      slipSpecial.textContent = CalcCurrency.format(Math.round(specialMonthly), 0);
+      slipGross.textContent = CalcCurrency.format(Math.round(grossMonthly), 0);
+      slipPf.textContent = CalcCurrency.format(Math.round(pfMonthly), 0);
+      slipPt.textContent = CalcCurrency.format(Math.round(ptMonthly), 0);
+      slipTotalDeduct.textContent = CalcCurrency.format(Math.round(totalDeductionsMonthly), 0);
+      slipNetInHand.textContent = CalcCurrency.format(Math.round(inHandMonthly), 0);
+    }
+
+    annualCtcInput.addEventListener('input', () => {
+      ctcSlider.value = annualCtcInput.value;
+      calculateCtc();
+    });
+    ctcSlider.addEventListener('input', () => {
+      annualCtcInput.value = ctcSlider.value;
+      calculateCtc();
+    });
+
+    document.querySelectorAll('.ctc-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset.val;
+        annualCtcInput.value = val;
+        ctcSlider.value = val;
+        calculateCtc();
+      });
+    });
+
+    basicPercentInput.addEventListener('input', calculateCtc);
+    hraPercentInput.addEventListener('input', calculateCtc);
+    bonusInput.addEventListener('input', calculateCtc);
+    pfPercentInput.addEventListener('input', calculateCtc);
+    ptMonthlyInput.addEventListener('input', calculateCtc);
+    ctcDailyHours.addEventListener('input', calculateCtc);
+    ctcMonthlyDays.addEventListener('input', calculateCtc);
+
+    resetCtcBtn.addEventListener('click', () => {
+      annualCtcInput.value = '600000';
+      ctcSlider.value = '600000';
+      basicPercentInput.value = '50';
+      hraPercentInput.value = '40';
+      bonusInput.value = '0';
+      pfPercentInput.value = '12';
+      ptMonthlyInput.value = '200';
+      ctcDailyHours.value = '8';
+      ctcMonthlyDays.value = '22';
+      calculateCtc();
+    });
+
+    document.getElementById('copyCtcBtn').addEventListener('click', () => {
+      const summaryText = `💼 CTC to In-Hand Salary Breakdown:\n` +
+        `• Annual CTC: ${CalcCurrency.format(parseFloat(annualCtcInput.value) || 0, 0)}\n` +
+        `• Monthly In-Hand: ${monthlyInHand.textContent}\n` +
+        `• Yearly In-Hand: ${yearlyInHand.textContent}\n` +
+        `• Monthly Deductions: ${totalMonthlyDeductions.textContent}\n` +
+        `• Per Day (${ctcDailyHours.value} hrs): ${dailyEarnings.textContent}\n` +
+        `Calculated via CalcHub.`;
+      navigator.clipboard.writeText(summaryText).then(() => {
+        window.showToast('Salary breakdown copied to clipboard!');
+      });
+    });
+
+    document.getElementById('shareCtcWhatsAppBtn').addEventListener('click', () => {
+      const summaryText = `💼 *My In-Hand Salary Breakdown (CalcHub)*\n\n` +
+        `• *Annual CTC:* ${CalcCurrency.format(parseFloat(annualCtcInput.value) || 0, 0)}\n` +
+        `• *Monthly In-Hand:* ${monthlyInHand.textContent}\n` +
+        `• *Yearly In-Hand:* ${yearlyInHand.textContent}\n` +
+        `• *Monthly Deductions (PF & PT):* ${totalMonthlyDeductions.textContent}\n\n` +
+        `Calculated via: ${window.location.href}`;
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(summaryText)}`;
+      window.open(url, '_blank');
+    });
+
+    // ----------------------------------------------------
+    // HOURLY TO SALARY CONVERTER LOGIC (EXISTING)
+    // ----------------------------------------------------
     const payRateInput = document.getElementById('payRate');
     const payPeriodSelect = document.getElementById('payPeriod');
     const hoursPerWeekInput = document.getElementById('hoursPerWeek');
@@ -203,7 +628,7 @@
     const biweeklyPayEl = document.getElementById('biweeklyPay');
     const monthlyPayEl = document.getElementById('monthlyPay');
 
-    function calculatePay() {
+    function calculateHourly() {
       const rate = parseFloat(payRateInput.value) || 0;
       const hours = parseFloat(hoursPerWeekInput.value) || 40;
       const weeks = parseFloat(weeksPerYearInput.value) || 52;
@@ -233,13 +658,13 @@
       monthlyPayEl.textContent = CalcCurrency.format(monthly);
     }
 
-    payRateInput.addEventListener('input', calculatePay);
-    payPeriodSelect.addEventListener('change', calculatePay);
-    hoursPerWeekInput.addEventListener('input', () => { hoursSlider.value = hoursPerWeekInput.value; calculatePay(); });
-    hoursSlider.addEventListener('input', () => { hoursPerWeekInput.value = hoursSlider.value; calculatePay(); });
-    weeksPerYearInput.addEventListener('input', calculatePay);
+    payRateInput.addEventListener('input', calculateHourly);
+    payPeriodSelect.addEventListener('change', calculateHourly);
+    hoursPerWeekInput.addEventListener('input', () => { hoursSlider.value = hoursPerWeekInput.value; calculateHourly(); });
+    hoursSlider.addEventListener('input', () => { hoursPerWeekInput.value = hoursSlider.value; calculateHourly(); });
+    weeksPerYearInput.addEventListener('input', calculateHourly);
 
-    document.getElementById('copyBtn').addEventListener('click', () => {
+    document.getElementById('copyHourlyBtn').addEventListener('click', () => {
       const summaryText = `Wage & Salary Breakdown:\n` +
         `• Hourly Rate: ${hourlyRateEl.textContent}\n` +
         `• Weekly Pay: ${weeklyPayEl.textContent}\n` +
@@ -251,8 +676,13 @@
       });
     });
 
-    window.addEventListener('currencyChanged', calculatePay);
-    calculatePay();
+    window.addEventListener('currencyChanged', () => {
+      calculateCtc();
+      calculateHourly();
+    });
+
+    calculateCtc();
+    calculateHourly();
   </script>
 </body>
 </html>

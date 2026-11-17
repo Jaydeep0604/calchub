@@ -92,47 +92,80 @@
         </h2>
 
         <div class="space-y-6">
-          <!-- Attendees -->
+          <!-- Meeting Mode Selector: Simple Average vs Individual Team Members -->
           <div>
             <div class="flex justify-between items-center mb-2.5">
-              <label for="attendeeCount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="meeting_attendees">Number of Attendees</label>
-              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
-                <input type="number" id="attendeeCount" value="6" min="1" max="250" step="1"
-                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                <span class="text-slate-500 font-normal" data-i18n="people">people</span>
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">Attendee Setup</label>
+              <div class="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold">
+                <button type="button" id="attendeeModeAverage" class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition">Average Rate</button>
+                <button type="button" id="attendeeModeIndividual" class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Team Members 👥</button>
               </div>
             </div>
-            <input type="range" id="attendeeSlider" min="2" max="50" step="1" value="6" class="w-full">
+
+            <!-- Mode 1: Simple Average Attendees & Wage -->
+            <div id="averageAttendeeSection" class="space-y-5">
+              <!-- Attendees Slider -->
+              <div>
+                <div class="flex justify-between items-center mb-2.5">
+                  <label for="attendeeCount" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="meeting_attendees">Number of Attendees</label>
+                  <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                    <input type="number" id="attendeeCount" value="6" min="1" max="250" step="1"
+                      class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                    <span class="text-slate-500 font-normal" data-i18n="people">people</span>
+                  </div>
+                </div>
+                <input type="range" id="attendeeSlider" min="2" max="50" step="1" value="6" class="w-full">
+              </div>
+
+              <!-- Average Rate / Salary -->
+              <div>
+                <div class="flex justify-between items-center mb-2.5">
+                  <label for="wageInput" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" id="wageLabel" data-i18n="meeting_wage">Average Hourly Rate per Person</label>
+                  <div class="relative rounded-xl shadow-sm">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
+                    <input type="number" id="wageInput" value="45.00" min="5" step="1"
+                      class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  </div>
+                </div>
+                <input type="range" id="wageSlider" min="10" max="200" step="1" value="45" class="w-full">
+                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1" id="wageEquivText">Equivalent to approx $93,600 / year per participant (2,080 annual work hours).</p>
+              </div>
+            </div>
+
+            <!-- Mode 2: Individual Team Members (Memtime Style) -->
+            <div id="individualAttendeeSection" class="hidden space-y-3">
+              <span class="text-xs text-slate-500 dark:text-slate-400">Add meeting participants with their specific hourly pay rate:</span>
+              <div id="membersList" class="space-y-2">
+                <!-- Dynamically generated rows -->
+              </div>
+              <button type="button" id="addMemberBtn" class="w-full py-2 border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-cyan-500 dark:hover:border-cyan-400 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 transition flex items-center justify-center gap-1.5">
+                <span>+</span> <span>Add Participant</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Average Rate / Salary -->
-          <div>
-            <div class="flex justify-between items-center mb-2.5">
-              <label for="wageInput" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" id="wageLabel" data-i18n="meeting_wage">Average Hourly Rate per Person</label>
-              <div class="relative rounded-xl shadow-sm">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 dark:text-slate-500 text-sm font-bold currency-symbol">$</span>
-                <input type="number" id="wageInput" value="45.00" min="5" step="1"
-                  class="w-32 pl-8 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+          <!-- Duration: Both Hours & Minutes -->
+          <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2.5">
+              <label class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="meeting_duration">Planned Duration</label>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                  <input type="number" id="durationHours" value="0" min="0" max="24" step="1"
+                    class="w-16 pl-2 pr-2 py-1.5 text-center font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <span class="text-xs text-slate-500 font-normal">hrs</span>
+                </div>
+                <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
+                  <input type="number" id="durationMins" value="45" min="0" max="59" step="5"
+                    class="w-16 pl-2 pr-2 py-1.5 text-center font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                  <span class="text-xs text-slate-500 font-normal">mins</span>
+                </div>
               </div>
             </div>
-            <input type="range" id="wageSlider" min="10" max="200" step="1" value="45" class="w-full">
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1" id="wageEquivText">Equivalent to approx $93,600 / year per participant (2,080 annual work hours).</p>
-          </div>
-
-          <!-- Duration -->
-          <div>
-            <div class="flex justify-between items-center mb-2.5">
-              <label for="meetingDuration" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200" data-i18n="meeting_duration">Planned Duration</label>
-              <div class="flex items-center gap-1 font-bold text-slate-900 dark:text-white text-sm">
-                <input type="number" id="meetingDuration" value="45" min="5" max="480" step="5"
-                  class="w-20 pl-3 pr-3 py-1.5 text-right font-black text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none">
-                <span class="text-slate-500 font-normal" data-i18n="minutes">minutes</span>
-              </div>
-            </div>
-            <input type="range" id="durationSlider" min="15" max="180" step="15" value="45" class="w-full">
+            <input type="range" id="durationSlider" min="5" max="240" step="5" value="45" class="w-full">
             <div class="flex justify-between text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-1.5">
               <span>15 min (Standup)</span>
               <span>45 min</span>
+              <span>1 hr 30 min</span>
               <span>3 hr (Workshop)</span>
             </div>
           </div>
@@ -232,6 +265,11 @@
 
   <script>
     let wageMode = 'hourly'; // 'hourly' or 'annual'
+    let isIndividualMode = false;
+    let members = [
+      { name: 'Hardik', rate: 100 },
+      { name: 'Jaydeep', rate: 200 }
+    ];
 
     const btnHourly = document.getElementById('btnHourly');
     const btnAnnual = document.getElementById('btnAnnual');
@@ -240,10 +278,22 @@
     const wageSlider = document.getElementById('wageSlider');
     const wageEquivText = document.getElementById('wageEquivText');
 
+    // Attendee mode elements
+    const attendeeModeAverage = document.getElementById('attendeeModeAverage');
+    const attendeeModeIndividual = document.getElementById('attendeeModeIndividual');
+    const averageAttendeeSection = document.getElementById('averageAttendeeSection');
+    const individualAttendeeSection = document.getElementById('individualAttendeeSection');
+    const membersList = document.getElementById('membersList');
+    const addMemberBtn = document.getElementById('addMemberBtn');
+
     const attendeeCountInput = document.getElementById('attendeeCount');
     const attendeeSlider = document.getElementById('attendeeSlider');
-    const meetingDurationInput = document.getElementById('meetingDuration');
+
+    // Duration inputs: Hours + Mins
+    const durationHours = document.getElementById('durationHours');
+    const durationMins = document.getElementById('durationMins');
     const durationSlider = document.getElementById('durationSlider');
+
     const resetBtn = document.getElementById('resetBtn');
     const copyBtn = document.getElementById('copyBtn');
 
@@ -263,22 +313,133 @@
     const pauseTickerBtn = document.getElementById('pauseTickerBtn');
     const resetTickerBtn = document.getElementById('resetTickerBtn');
 
+    // Attendee mode switching
+    attendeeModeAverage.addEventListener('click', () => {
+      isIndividualMode = false;
+      attendeeModeAverage.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      attendeeModeAverage.classList.remove('text-slate-500', 'dark:text-slate-400');
+      attendeeModeIndividual.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      attendeeModeIndividual.classList.add('text-slate-500', 'dark:text-slate-400');
+      averageAttendeeSection.classList.remove('hidden');
+      individualAttendeeSection.classList.add('hidden');
+      calculateMeeting();
+    });
+
+    attendeeModeIndividual.addEventListener('click', () => {
+      isIndividualMode = true;
+      attendeeModeIndividual.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      attendeeModeIndividual.classList.remove('text-slate-500', 'dark:text-slate-400');
+      attendeeModeAverage.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-900', 'dark:text-white', 'shadow-sm');
+      attendeeModeAverage.classList.add('text-slate-500', 'dark:text-slate-400');
+      individualAttendeeSection.classList.remove('hidden');
+      averageAttendeeSection.classList.add('hidden');
+      renderMembersList();
+      calculateMeeting();
+    });
+
+    function renderMembersList() {
+      membersList.innerHTML = '';
+      members.forEach((m, idx) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60';
+        row.innerHTML = `
+          <input type="text" value="${m.name}" data-idx="${idx}" class="member-name flex-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none" placeholder="Name">
+          <div class="relative w-28 rounded-lg shadow-sm">
+            <span class="absolute inset-y-0 left-0 pl-2 flex items-center text-slate-400 text-xs font-bold currency-symbol">$</span>
+            <input type="number" value="${m.rate}" data-idx="${idx}" min="1" step="5" class="member-rate w-full pl-6 pr-8 py-1 text-right text-xs font-black rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none">
+            <span class="absolute inset-y-0 right-0 pr-1.5 flex items-center text-slate-400 text-[10px] font-medium">/hr</span>
+          </div>
+          ${members.length > 1 ? `<button type="button" data-idx="${idx}" class="remove-member-btn w-6 h-6 rounded-md border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-cyan-500 text-xs font-bold transition flex items-center justify-center">✕</button>` : ''}
+        `;
+        membersList.appendChild(row);
+      });
+
+      document.querySelectorAll('.member-name').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+          members[e.target.dataset.idx].name = e.target.value;
+          calculateMeeting();
+        });
+      });
+
+      document.querySelectorAll('.member-rate').forEach(inp => {
+        inp.addEventListener('input', (e) => {
+          members[e.target.dataset.idx].rate = parseFloat(e.target.value) || 0;
+          calculateMeeting();
+        });
+      });
+
+      document.querySelectorAll('.remove-member-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx);
+          members.splice(idx, 1);
+          renderMembersList();
+          calculateMeeting();
+        });
+      });
+    }
+
+    addMemberBtn.addEventListener('click', () => {
+      members.push({ name: `Member ${members.length + 1}`, rate: 50 });
+      renderMembersList();
+      calculateMeeting();
+    });
+
+    function getTotalDuration() {
+      const hrs = Math.max(0, parseInt(durationHours.value) || 0);
+      const mins = Math.max(0, parseInt(durationMins.value) || 0);
+      return Math.max(1, hrs * 60 + mins);
+    }
+
+    function setDuration(totalMins) {
+      const hrs = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      durationHours.value = hrs;
+      durationMins.value = mins;
+      durationSlider.value = totalMins;
+      calculateMeeting();
+    }
+
+    durationHours.addEventListener('input', () => {
+      durationSlider.value = getTotalDuration();
+      calculateMeeting();
+    });
+    durationMins.addEventListener('input', () => {
+      durationSlider.value = getTotalDuration();
+      calculateMeeting();
+    });
+    durationSlider.addEventListener('input', () => {
+      setDuration(parseInt(durationSlider.value) || 45);
+    });
+
     function getHourlyWage() {
       const val = parseFloat(wageInput.value) || 0;
       return wageMode === 'hourly' ? val : (val / 2080);
     }
 
     function calculateMeeting() {
-      const attendees = Math.max(1, parseInt(attendeeCountInput.value) || 1);
-      const hourlyWage = Math.max(0, getHourlyWage());
-      const durationMins = Math.max(1, parseFloat(meetingDurationInput.value) || 1);
+      let attendees = 0;
+      let totalRoomHourlyRate = 0;
+
+      if (isIndividualMode) {
+        attendees = Math.max(1, members.length);
+        totalRoomHourlyRate = members.reduce((sum, m) => sum + (parseFloat(m.rate) || 0), 0);
+      } else {
+        attendees = Math.max(1, parseInt(attendeeCountInput.value) || 1);
+        const hourlyWage = Math.max(0, getHourlyWage());
+        totalRoomHourlyRate = attendees * hourlyWage;
+      }
+
+      const durationTotalMins = getTotalDuration();
+      const hrs = Math.floor(durationTotalMins / 60);
+      const mins = durationTotalMins % 60;
+      const durationFormatted = hrs > 0 ? (mins > 0 ? `${hrs}h ${mins}m` : `${hrs}h`) : `${mins}m`;
 
       summaryPeopleEl.textContent = attendees;
-      summaryDurationEl.textContent = durationMins;
+      summaryDurationEl.textContent = durationFormatted;
 
-      const costPerMin = (attendees * hourlyWage) / 60;
-      const totalCost = costPerMin * durationMins;
-      const costPerPerson = totalCost / attendees;
+      const costPerMin = totalRoomHourlyRate / 60;
+      const totalCost = costPerMin * durationTotalMins;
+      const costPerPerson = attendees > 0 ? totalCost / attendees : 0;
       const annualCost = totalCost * 52;
 
       totalCostEl.textContent = CalcCurrency.format(totalCost);
@@ -286,24 +447,23 @@
       costPerPersonEl.textContent = CalcCurrency.format(costPerPerson);
       annualCostEl.textContent = CalcCurrency.format(annualCost);
 
-      if (wageMode === 'hourly') {
-        const annualEquiv = hourlyWage * 2080;
-        wageEquivText.textContent = `Equivalent to approx ${CalcCurrency.format(annualEquiv, 0)} / year per participant (2,080 work hrs).`;
-      } else {
-        wageEquivText.textContent = `Equivalent to approx ${CalcCurrency.format(hourlyWage)} / hour per participant.`;
+      if (!isIndividualMode) {
+        const hourlyWage = getHourlyWage();
+        if (wageMode === 'hourly') {
+          const annualEquiv = hourlyWage * 2080;
+          wageEquivText.textContent = `Equivalent to approx ${CalcCurrency.format(annualEquiv, 0)} / year per participant (2,080 work hrs).`;
+        } else {
+          wageEquivText.textContent = `Equivalent to approx ${CalcCurrency.format(hourlyWage)} / hour per participant.`;
+        }
       }
 
       updateLiveTickerDisplay();
     }
 
-    function sync(input, slider) {
-      input.addEventListener('input', () => { slider.value = input.value; calculateMeeting(); });
-      slider.addEventListener('input', () => { input.value = slider.value; calculateMeeting(); });
-    }
-
-    sync(attendeeCountInput, attendeeSlider);
-    sync(meetingDurationInput, durationSlider);
-    sync(wageInput, wageSlider);
+    attendeeCountInput.addEventListener('input', () => { attendeeSlider.value = attendeeCountInput.value; calculateMeeting(); });
+    attendeeSlider.addEventListener('input', () => { attendeeCountInput.value = attendeeSlider.value; calculateMeeting(); });
+    wageInput.addEventListener('input', () => { wageSlider.value = wageInput.value; calculateMeeting(); });
+    wageSlider.addEventListener('input', () => { wageInput.value = wageSlider.value; calculateMeeting(); });
 
     // Wage Mode Switching
     function setWageMode(mode) {
@@ -340,18 +500,30 @@
     btnAnnual.addEventListener('click', () => setWageMode('annual'));
 
     // Live Ticker Logic
+    function getCostPerSecond() {
+      let totalRoomHourlyRate = 0;
+      if (isIndividualMode) {
+        totalRoomHourlyRate = members.reduce((sum, m) => sum + (parseFloat(m.rate) || 0), 0);
+      } else {
+        const attendees = Math.max(1, parseInt(attendeeCountInput.value) || 1);
+        const hourlyWage = Math.max(0, getHourlyWage());
+        totalRoomHourlyRate = attendees * hourlyWage;
+      }
+      return totalRoomHourlyRate / 3600;
+    }
+
+    function formatTimer(totalSecs) {
+      const mins = Math.floor(totalSecs / 60);
+      const secs = totalSecs % 60;
+      return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
     function updateLiveTickerDisplay() {
-      const attendees = Math.max(1, parseInt(attendeeCountInput.value) || 1);
-      const hourlyWage = Math.max(0, getHourlyWage());
-      const costPerSec = (attendees * hourlyWage) / 3600;
+      const costPerSec = getCostPerSecond();
       const currentSpent = costPerSec * tickerElapsedSeconds;
 
       liveTickerCostEl.textContent = CalcCurrency.format(currentSpent);
-
-      const hrs = String(Math.floor(tickerElapsedSeconds / 3600)).padStart(2, '0');
-      const mins = String(Math.floor((tickerElapsedSeconds % 3600) / 60)).padStart(2, '0');
-      const secs = String(tickerElapsedSeconds % 60).padStart(2, '0');
-      tickerTimerEl.textContent = `${hrs}:${mins}:${secs}`;
+      tickerTimerEl.textContent = formatTimer(tickerElapsedSeconds);
     }
 
     startTickerBtn.addEventListener('click', () => {
@@ -390,8 +562,14 @@
     resetBtn.addEventListener('click', () => {
       attendeeCountInput.value = '6';
       attendeeSlider.value = '6';
-      meetingDurationInput.value = '45';
+      durationHours.value = '0';
+      durationMins.value = '45';
       durationSlider.value = '45';
+      members = [
+        { name: 'Hardik', rate: 100 },
+        { name: 'Jaydeep', rate: 200 }
+      ];
+      attendeeModeAverage.click();
       if (wageMode === 'hourly') {
         wageInput.value = '45';
         wageSlider.value = '45';
@@ -405,7 +583,7 @@
     copyBtn.addEventListener('click', () => {
       const text = `📊 Meeting Cost Summary:\n` +
         `• Attendees: ${summaryPeopleEl.textContent} people\n` +
-        `• Duration: ${summaryDurationEl.textContent} minutes\n` +
+        `• Duration: ${summaryDurationEl.textContent}\n` +
         `• Cost Per Minute: ${costPerMinEl.textContent}\n` +
         `• Total Cost: ${totalCostEl.textContent}\n` +
         `• Annual Recurring (52x): ${annualCostEl.textContent}\n` +
